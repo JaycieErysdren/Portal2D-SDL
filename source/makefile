@@ -25,7 +25,7 @@ GBM_DIR=../modules/gbm
 
 # C compiler
 CC=wcc386
-CCFLAGS=-w4 -e25 -zq -otexan -d1 -fp3 -4r -bt=d&
+CCFLAGS=-w4 -e25 -zq -otexan -d1 -fp3 -4r -mf -bt=dos&
 	-I$(WATCOM_DIR)/h&
 
 # ASM compiler
@@ -70,6 +70,6 @@ $(TARGET): $(OBJS) $(TARGET_EXEC).lnk
 # Link response file
 $(TARGET_EXEC).lnk: makefile
 	echo name $(TARGET) >$(TARGET_EXEC).lnk
-	echo libpath $(WATCOM_DIR)/lib386/dos >>$(TARGET_EXEC).lnk
+	echo system dos4g >>$(TARGET_EXEC).lnk
 	for %i in ($(OBJS)) do echo file %i >>$(TARGET_EXEC).lnk
 	for %i in ($(LIBS)) do echo library %i >>$(TARGET_EXEC).lnk
