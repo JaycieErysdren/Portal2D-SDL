@@ -843,6 +843,8 @@ void engine_create(void)
 
 	say("AlienKinetics 3D Engine [DOS] - Copyright (C) 2001-2002 AlienKinetics");
 	say("---------------------------------------------------------------------");
+	say("Modified 2022-2023 by Erysdren Media");
+	say("---------------------------------------------------------------------");
 	say("");
 
 	say("Installing mouse driver.");
@@ -867,6 +869,9 @@ void engine_create(void)
 
 void main(int argc, char *argv[])
 {
+	char *start_map;
+	if (argc > 1) start_map = argv[1];
+
 	freopen("stderr.txt", "w", stderr);
 	freopen("stdout.txt", "w", stdout);
 
@@ -878,29 +883,37 @@ void main(int argc, char *argv[])
 
 	engine_create();
 
-	level_load_from_file("test.map");
-
 	mouse_show(1);
 
-	for (;;)
+	if (start_map)
 	{
-		//editor_execute();
+		level_load_from_file(start_map);
 
-		div0_init(DM_SATURATE);
-		engine_execute();
-		div0_close();
-
-		if (view.key == 'q') break;
-
-		/*
-		if (view.key == 13)
+		for (;;)
 		{
 			div0_init(DM_SATURATE);
 			engine_execute();
 			div0_close();
+
 			if (view.key == 'q') break;
 		}
-		*/
+	}
+	else
+	{
+		for (;;)
+		{
+			editor_execute();
+
+			if (view.key == 'q') break;
+
+			if (view.key == 13)
+			{
+				div0_init(DM_SATURATE);
+				engine_execute();
+				div0_close();
+				if (view.key == 'q') break;
+			}
+		}
 	}
 
 	engine_destroy();
