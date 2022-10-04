@@ -554,6 +554,24 @@ void show_logo(void)
 	picture_destroy(&pic_logo);
 }
 
+void engine_destroy(void)
+{
+	timer_remove();
+	keyboard_remove();
+
+	picture_destroy(&pic_fbuffer);
+	picture_destroy(&pic_bbuffer);
+	picture_destroy(&pic_zbuffer);
+	picture_destroy(&pic_stencil);
+	picture_destroy(&pic_console);
+
+	mouse_show(0);
+
+	_setvideomode(_DEFAULTMODE);
+
+	exit(EXIT_SUCCESS);
+}
+
 void engine_execute(void)
 {
 	int i, x, y;
@@ -570,12 +588,10 @@ void engine_execute(void)
 
 	picture_create(&pic_bbuffer, 320, 200, 8, 0, 0);
 
-
 	picture_create(&pic_zbuffer, pic_fbuffer.width, pic_fbuffer.height, 16, 0, 0);
 	picture_create(&pic_stencil, pic_fbuffer.width, pic_fbuffer.height, 16, 0, 0);
 
 	picture_create(&pic_console, 40, 10, 8, 0, 0);
-
 
 	for(i = 0; i < 256; i++)
 	{
@@ -695,7 +711,7 @@ void engine_execute(void)
 			if (KEY_DOWN(KB_RTARROW)) camera->rot.y += 7;
 			if (KEY_DOWN(KB_LTARROW)) camera->rot.y -= 7;
 
-			if (KEY_DOWN(KB_ESC)) goto stop_game;
+			if (KEY_DOWN(KB_ESC)) engine_destroy();
 
 #define SURFACE_EDIT(VAR,SUR,A) (clipboard.VAR = (SUR.VAR = KEY_DOWN(KB_CTRL) ? clipboard.VAR : SUR.VAR + (KEY_DOWN(KB_LTSHIFT) ? -(A) : (A))))
 
@@ -816,15 +832,8 @@ void engine_execute(void)
 			memcpy(keyprev, keydown, sizeof(keyprev));
 		}
 	}
-stop_game:
-	timer_remove();
-	keyboard_remove();
 
-	picture_destroy(&pic_fbuffer);
-	picture_destroy(&pic_bbuffer);
-	picture_destroy(&pic_zbuffer);
-	picture_destroy(&pic_stencil);
-	picture_destroy(&pic_console);
+	engine_destroy();
 }
 
 
@@ -869,14 +878,21 @@ void main(int argc, char *argv[])
 
 	engine_create();
 
+	level_load_from_file("test.map");
+
 	mouse_show(1);
 
 	for (;;)
 	{
-		editor_execute();
+		//editor_execute();
+
+		div0_init(DM_SATURATE);
+		engine_execute();
+		div0_close();
 
 		if (view.key == 'q') break;
 
+		/*
 		if (view.key == 13)
 		{
 			div0_init(DM_SATURATE);
@@ -884,9 +900,8 @@ void main(int argc, char *argv[])
 			div0_close();
 			if (view.key == 'q') break;
 		}
+		*/
 	}
 
-	mouse_show(0);
-
-	_setvideomode(_DEFAULTMODE);
+	engine_destroy();
 }
