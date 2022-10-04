@@ -19,20 +19,20 @@
 
 typedef union
 {
-  BYTE**  b;
-  WORD**  w;
-  DWORD** l;
+	BYTE**  b;
+	WORD**  w;
+	DWORD** l;
 } SCANLINES;
 
 typedef struct
 {
-  LONG  width;              /* width of picture in pixels */
-  LONG  height;             /* height of picture in pixels */
-  LONG  bpp;                /* bits per pixel */
-  LONG  bytes_per_row;      /* bytes per row. rows are 4 byte aligned */
-  LONG  shared;             /* false if buffer is owned. TODO: reference counting */  
-  VOID* buffer;             /* allocated pixel buffer */
-  SCANLINES scanlines;      /* pre-calculated scanline pointers */  
+	LONG  width;              /* width of picture in pixels */
+	LONG  height;             /* height of picture in pixels */
+	LONG  bpp;                /* bits per pixel */
+	LONG  bytes_per_row;      /* bytes per row. rows are 4 byte aligned */
+	LONG  shared;             /* false if buffer is owned. TODO: reference counting */  
+	VOID* buffer;             /* allocated pixel buffer */
+	SCANLINES scanlines;      /* pre-calculated scanline pointers */  
 } PICTURE;
 
 void picture_create(PICTURE* picture, int width, int height, int bpp, int bytes_per_row, void* buffer);
@@ -50,13 +50,12 @@ void picture_draw8(PICTURE* dst, PICTURE* src, int x, int y, int mode);
 #define PICTURE_MODE_COLORKEY 1
 
 void picture_blit8(
-   PICTURE* dst, int x1, int y1, int x2, int y2,
-   PICTURE* src, int u1, int v1, int u2, int v2, int flags);
+	 PICTURE* dst, int x1, int y1, int x2, int y2,
+	 PICTURE* src, int u1, int v1, int u2, int v2, int flags);
 
 void picture_luquid_effect8(PICTURE* dst, PICTURE* src, int tick);
 void picture_blend8(PICTURE* dst, PICTURE* src1, PICTURE* src2, CLUT blender);
 
 int palette_search(PALLETE palette, int r, int g, int b);
-   
+	 
 #endif
-

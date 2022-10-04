@@ -17,7 +17,7 @@
 
 typedef struct
 {
-  LONG x, y, z;
+	LONG x, y, z;
 } VECTOR;
 
 typedef LONG PLANE[4];
@@ -35,4 +35,3 @@ VOID matrix_transpose(MATRIX dst, MATRIX src);
 VOID matrix_multiply(MATRIX dst, MATRIX ma1, MATRIX ma2);
 
 #endif
-

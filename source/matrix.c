@@ -19,7 +19,7 @@
 */
 void matrix_copy(MATRIX dst, MATRIX src)
 {
-  memcpy(dst, src, sizeof(MATRIX));
+	memcpy(dst, src, sizeof(MATRIX));
 }
 
 /*
@@ -28,75 +28,75 @@ void matrix_copy(MATRIX dst, MATRIX src)
 */
 void matrix_identity(MATRIX dst)
 {
-  MATRIX src = 
-  {
-    {i2f(1), i2f(0), i2f(0), i2f(0)},
-    {i2f(0), i2f(1), i2f(0), i2f(0)},
-    {i2f(0), i2f(0), i2f(1), i2f(0)},
-    {i2f(0), i2f(0), i2f(0), i2f(1)}
-  };
-  matrix_copy(dst, src);
+	MATRIX src = 
+	{
+		{i2f(1), i2f(0), i2f(0), i2f(0)},
+		{i2f(0), i2f(1), i2f(0), i2f(0)},
+		{i2f(0), i2f(0), i2f(1), i2f(0)},
+		{i2f(0), i2f(0), i2f(0), i2f(1)}
+	};
+	matrix_copy(dst, src);
 }
 
 void matrix_position(MATRIX dst, int x, int y, int z)
 {
-  matrix_identity(dst);
-  dst[0][3] = x;
-  dst[1][3] = y;
-  dst[2][3] = z;
+	matrix_identity(dst);
+	dst[0][3] = x;
+	dst[1][3] = y;
+	dst[2][3] = z;
 }
 
 void matrix_scale(MATRIX dst, int x, int y, int z)
 {
-  matrix_identity(dst);
-  dst[0][0] = x;
-  dst[1][1] = y;
-  dst[2][2] = z;  
+	matrix_identity(dst);
+	dst[0][0] = x;
+	dst[1][1] = y;
+	dst[2][2] = z;  
 }
 
 void matrix_rotate_x(MATRIX dst, int angle)
 {
-  matrix_identity(dst);
-  dst[1][1] =   (dst[2][2] = fixcos(angle));
-  dst[1][2] = - (dst[2][1] = fixsin(angle));  
+	matrix_identity(dst);
+	dst[1][1] =   (dst[2][2] = fixcos(angle));
+	dst[1][2] = - (dst[2][1] = fixsin(angle));  
 }
 
 void matrix_rotate_y(MATRIX dst, int angle)
 {
-  matrix_identity(dst);
-  dst[0][0] =   (dst[2][2] = fixcos(angle));
-  dst[0][2] = - (dst[2][0] = fixsin(angle));
+	matrix_identity(dst);
+	dst[0][0] =   (dst[2][2] = fixcos(angle));
+	dst[0][2] = - (dst[2][0] = fixsin(angle));
 }
 
 void matrix_rotate_z(MATRIX dst, int angle)
 {
-   matrix_identity(dst);
-   dst[0][0] =   (dst[1][1] = fixcos(angle));
-   dst[0][1] = - (dst[1][0] = fixsin(angle));  
+	 matrix_identity(dst);
+	 dst[0][0] =   (dst[1][1] = fixcos(angle));
+	 dst[0][1] = - (dst[1][0] = fixsin(angle));  
 }
 
 void matrix_multiply(MATRIX dst, MATRIX ma1, MATRIX ma2)
 {
-  int i, j;
-  MATRIX tmp;
-   
-  for (i = 4; i--;)
-  {
-    for (j = 4; j--;)
-    {
-      tmp[i][j] =
-        fixmul(ma2[i][0], ma1[0][j]) +
-        fixmul(ma2[i][1], ma1[1][j]) +
-        fixmul(ma2[i][2], ma1[2][j]) +
-        fixmul(ma2[i][3], ma1[3][j]); 
-    }
-  }
-  matrix_copy(dst, tmp);
+	int i, j;
+	MATRIX tmp;
+	 
+	for (i = 4; i--;)
+	{
+		for (j = 4; j--;)
+		{
+			tmp[i][j] =
+				fixmul(ma2[i][0], ma1[0][j]) +
+				fixmul(ma2[i][1], ma1[1][j]) +
+				fixmul(ma2[i][2], ma1[2][j]) +
+				fixmul(ma2[i][3], ma1[3][j]); 
+		}
+	}
+	matrix_copy(dst, tmp);
 }
 
 void matrix_transpose(MATRIX dst, MATRIX src)
 {
-  int x, y;
-  
-  for (y = 4; y--;) for (x = 4; x--;) dst[x][y] = src[y][x];
+	int x, y;
+	
+	for (y = 4; y--;) for (x = 4; x--;) dst[x][y] = src[y][x];
 }

@@ -15,53 +15,39 @@
 
 #include <math.h>
 
-#ifdef _M_I86
- #define INT_MIN    (-32767-1)      /* minimum value of an int          */
- #define INT_MAX    32767           /* maximum value of an int          */
- #define UINT_MAX   65535U          /* maximum value of an unsigned int */
-#else
- #define INT_MIN    (-2147483647-1) /* minimum value of an int          */
- #define INT_MAX    2147483647      /* maximum value of an int          */
- #define UINT_MAX   4294967295U     /* maximum value of an unsigned int */
-#endif
-
 int isqrt(int value);
 
 int imin(int, int);
 #pragma aux imin =\
-  "cmp eax, ebx",\
-  "jl skipit",\
-  "mov eax, ebx",\
-  "skipit:",\
-  parm nomemory [eax][ebx]\
-  modify exact [eax];
+	"cmp eax, ebx",\
+	"jl skipit",\
+	"mov eax, ebx",\
+	"skipit:",\
+	parm nomemory [eax][ebx]\
+	modify exact [eax];
 
 int imax(int, int);
 #pragma aux imax =\
-  "cmp eax, ebx",\
-  "jg skipit",\
-  "mov eax, ebx",\
-  "skipit:",\
-  parm nomemory [eax][ebx]\
-  modify exact [eax];
+	"cmp eax, ebx",\
+	"jg skipit",\
+	"mov eax, ebx",\
+	"skipit:",\
+	parm nomemory [eax][ebx]\
+	modify exact [eax];
 
 int isqr(int);
 #pragma aux isqr =\
-  "imul eax, eax",\
-  parm nomemory [eax]\
-  modify exact [eax]\
-  value [eax];
-  
+	"imul eax, eax",\
+	parm nomemory [eax]\
+	modify exact [eax]\
+	value [eax];
+	
 int imuldiv(int, int, int);
 #pragma aux imuldiv parm [eax] [edx] [ebx] modify exact [eax edx] = \
-  "imul edx"  \
-  "idiv ebx";
+	"imul edx"  \
+	"idiv ebx";
 
 void memcpy32(long *Source, long *Destination, int Length);
 #pragma aux memcpy32 = " rep movsd " parm [EDI] [ESI] [ECX] modify [EDI ESI ECX];
-
-      
+			
 #endif
-
-
-

@@ -4,6 +4,9 @@
 
 /cmake-build-*/
 
+/game/STDOUT.TXT
+/game/STDERR.TXT
+
 *.o
 *.O
 *.obj

@@ -20,25 +20,25 @@
 
 typedef struct
 {
-  // Persistent Variables. Moving these variables will break the file format!
-  WORD sid , _sid;
-  WORD next, _next;
-  WORD port, _port;
-  LONG x, y;   
-  SURFACE surface;
-  
-  int reserved;
-    
-  // Calculated variables. These variables are not saved out to a file.
-  VERTEX top;
-  VERTEX bot;
-  VERTEX mid;
-  VERTEX poly[4];
-  LONG dx, dy;
-  LONG visible;
-  LONG frame;
-  LONG length;
-  LONG distance;
+	// Persistent Variables. Moving these variables will break the file format!
+	WORD sid , _sid;
+	WORD next, _next;
+	WORD port, _port;
+	LONG x, y;   
+	SURFACE surface;
+	
+	int reserved;
+		
+	// Calculated variables. These variables are not saved out to a file.
+	VERTEX top;
+	VERTEX bot;
+	VERTEX mid;
+	VERTEX poly[4];
+	LONG dx, dy;
+	LONG visible;
+	LONG frame;
+	LONG length;
+	LONG distance;
 } WALL;
 
 int wall_create(int sid);
@@ -53,4 +53,3 @@ int wall_is_visible(int wid, int x, int y);
 POINT wall_closest_point(int wid, int x, int y);
 
 #endif
-

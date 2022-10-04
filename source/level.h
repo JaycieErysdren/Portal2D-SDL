@@ -40,4 +40,3 @@ void level_save_to_file(PATH fn);
 void level_load_from_file(PATH fn);
 
 #endif
-

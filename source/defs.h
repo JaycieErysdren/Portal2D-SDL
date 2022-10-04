@@ -13,6 +13,18 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+// JAYCIE 2022-10-03 - this is supposed to be included automatically from
+// the file "climits" in /watcom/h/, but it doesn't work for some reason.
+#ifdef _M_I86
+ #define INT_MIN    (-32767-1)      /* minimum value of an int          */
+ #define INT_MAX    32767           /* maximum value of an int          */
+ #define UINT_MAX   65535U          /* maximum value of an unsigned int */
+#else
+ #define INT_MIN    (-2147483647-1) /* minimum value of an int          */
+ #define INT_MAX    2147483647      /* maximum value of an int          */
+ #define UINT_MAX   4294967295U     /* maximum value of an unsigned int */
+#endif
+
 /*
 ** Include ANSIC Headers.
 */

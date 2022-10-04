@@ -60,4 +60,3 @@ void vga_install(int mode);
 void palette_install(PALLETE palette);
 
 #endif
-

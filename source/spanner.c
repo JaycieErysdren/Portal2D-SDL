@@ -17,88 +17,87 @@
 */
 void span_array_invalidate(span_array_t* spanline, int x1, int x2)
 {
-   spanline->nspans = 1;
-   spanline->spans[0].x1 = x1;
-   spanline->spans[0].x2 = x2;
+	spanline->nspans = 1;
+	spanline->spans[0].x1 = x1;
+	spanline->spans[0].x2 = x2;
 }
 
 void span_array_validate(span_array_t* array, int x1, int x2)
 {
-  int n;
-  span_t* span    = array->spans;
-  span_t* newspan = &array->spans[array->nspans];
+	int n;
+	span_t* span    = array->spans;
+	span_t* newspan = &array->spans[array->nspans];
 
-  for (n = array->nspans; n--; span++)
-  {
-    if (x1 < span->x2 && x2 > span->x1)
-    {
-      if (x1 > span->x1)
-      {
-        if (x2 < span->x2)
-        {
-          newspan->x1 = x2;
-          newspan->x2 = span->x2;
-          newspan++;
-          array->nspans++;
-        }
-        span->x2 = x1;
-      }
-      else
-      {
-        if (x2 < span->x2)
-        {
-          span->x1 = x2;
-        }
-        else
-        {
-          span_t* s;
-          for (s = span; s != newspan; s[0] = s[1], s++);
+	for (n = array->nspans; n--; span++)
+	{
+		if (x1 < span->x2 && x2 > span->x1)
+		{
+			if (x1 > span->x1)
+			{
+				if (x2 < span->x2)
+				{
+					newspan->x1 = x2;
+					newspan->x2 = span->x2;
+					newspan++;
+					array->nspans++;
+				}
+				span->x2 = x1;
+			}
+			else
+			{
+				if (x2 < span->x2)
+				{
+					span->x1 = x2;
+				}
+				else
+				{
+					span_t* s;
+					for (s = span; s != newspan; s[0] = s[1], s++);
 
-          newspan--;
-          span--;
-          array->nspans--;            
-        }
-      }
-    }
-  }
-  assert(array->nspans >= 0 && array->nspans < 60);
+					newspan--;
+					span--;
+					array->nspans--;            
+				}
+			}
+		}
+	}
+	assert(array->nspans >= 0 && array->nspans < 60);
 }
 
 void spanner_invalidate(spanner_t* spanner)
 {
-  int i;
-  
-  spanner->ngaps = spanner->height;
-   
-  for (i = 0; i < spanner->height; i++)
-  {
-    span_array_invalidate(&spanner->lines[i], 0, spanner->width);
-  }
+	int i;
+	
+	spanner->ngaps = spanner->height;
+	 
+	for (i = 0; i < spanner->height; i++)
+	{
+		span_array_invalidate(&spanner->lines[i], 0, spanner->width);
+	}
 }
 
 void spanner_validate(spanner_t* spanner, int x1, int y1, int x2, int y2)
 {
-  int i;
-  
-  for (i = y1; i < y2; i++)
-  {
-    span_array_validate(&spanner->lines[i], x1, x2);
+	int i;
+	
+	for (i = y1; i < y2; i++)
+	{
+		span_array_validate(&spanner->lines[i], x1, x2);
 
-    if (spanner->lines[i].nspans == 0) spanner->ngaps--;
-  }
+		if (spanner->lines[i].nspans == 0) spanner->ngaps--;
+	}
 }
 
 void spanner_create(spanner_t* spanner, int width, int height)
 {
-  memset(spanner, 0, sizeof(spanner_t));
+	memset(spanner, 0, sizeof(spanner_t));
 
-  spanner->width    = width;
-  spanner->height   = height;   
-  spanner->lines    = (span_array_t*) calloc(height, sizeof(span_array_t));
+	spanner->width    = width;
+	spanner->height   = height;   
+	spanner->lines    = (span_array_t*) calloc(height, sizeof(span_array_t));
 }
 
 void spanner_delete(spanner_t* spanner)
 {
-  free(spanner->lines);
+	free(spanner->lines);
 }
-

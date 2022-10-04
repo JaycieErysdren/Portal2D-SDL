@@ -21,19 +21,18 @@
 
 typedef struct 
 {
-  BYTE texture;
-  BYTE overlay;               
-  WORD flags;
-  BYTE light, red, green, blue; // RGB is _not_ currently used.
-  LONG slopex;
-  LONG slopey;
-  LONG slopez;
-  BYTE repeatx, _pad4, _pad5, _pad6;
-  BYTE repeaty, _pad7, _pad8, _pad9;
-  LONG panningx;                           // fixed point texture u offset
-  LONG panningy;                           // fixed point texture v offset
-  LONG reserved;  
+	BYTE texture;
+	BYTE overlay;               
+	WORD flags;
+	BYTE light, red, green, blue; // RGB is _not_ currently used.
+	LONG slopex;
+	LONG slopey;
+	LONG slopez;
+	BYTE repeatx, _pad4, _pad5, _pad6;
+	BYTE repeaty, _pad7, _pad8, _pad9;
+	LONG panningx;                           // fixed point texture u offset
+	LONG panningy;                           // fixed point texture v offset
+	LONG reserved;  
 } SURFACE;
 
 #endif
-

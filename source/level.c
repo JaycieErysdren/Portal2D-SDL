@@ -24,88 +24,87 @@ int sector_list_count;
 
 int chunk_write(FILE* fp, int type, int id, int flag, void* buff, int size)
 {
-  return
-    (fwrite(&type, sizeof(int), 1, fp) == 1) &&
-    (fwrite(&id  , sizeof(int), 1, fp) == 1) &&
-    (fwrite(&flag, sizeof(int), 1, fp) == 1) &&
-    (fwrite(&size, sizeof(int), 1, fp) == 1) &&
-    (fwrite(buff , size       , 1, fp) == 1);
+	return
+		(fwrite(&type, sizeof(int), 1, fp) == 1) &&
+		(fwrite(&id  , sizeof(int), 1, fp) == 1) &&
+		(fwrite(&flag, sizeof(int), 1, fp) == 1) &&
+		(fwrite(&size, sizeof(int), 1, fp) == 1) &&
+		(fwrite(buff , size       , 1, fp) == 1);
 }
 
 int chunk_read(FILE* fp, int* type, int* id, int* flag, void* buff, int* size)
 {
-  return
-    (fread(type, sizeof(int), 1, fp) == 1) &&
-    (fread(id  , sizeof(int), 1, fp) == 1) &&
-    (fread(flag, sizeof(int), 1, fp) == 1) &&        
-    (fread(size, sizeof(int), 1, fp) == 1) &&
-    (fread(buff, *size      , 1, fp) == 1);
+	return
+		(fread(type, sizeof(int), 1, fp) == 1) &&
+		(fread(id  , sizeof(int), 1, fp) == 1) &&
+		(fread(flag, sizeof(int), 1, fp) == 1) &&        
+		(fread(size, sizeof(int), 1, fp) == 1) &&
+		(fread(buff, *size      , 1, fp) == 1);
 }
 
 void wall_write(int wid, FILE* fp)
 {    
-  chunk_write(fp, 'WALL', wid, 0, &walls[wid], offsetof(WALL, reserved));
+	chunk_write(fp, 'WALL', wid, 0, &walls[wid], offsetof(WALL, reserved));
 }
 
 void sector_write(int sid, FILE* fp)
 {
-  chunk_write(fp, 'SECT', sid, 0, &sectors[sid], offsetof(SECTOR, reserved));
+	chunk_write(fp, 'SECT', sid, 0, &sectors[sid], offsetof(SECTOR, reserved));
 }
 
 void level_write(FILE* fp)
 {
-  int i;
-  for (i = 0; i < MAX_WALL  ; i++) if (walls  [i].sid) wall_write(i, fp);
-  for (i = 0; i < MAX_SECTOR; i++) if (sectors[i].lid) sector_write(i, fp);  
+	int i;
+	for (i = 0; i < MAX_WALL  ; i++) if (walls  [i].sid) wall_write(i, fp);
+	for (i = 0; i < MAX_SECTOR; i++) if (sectors[i].lid) sector_write(i, fp);  
 }
 
 void level_clear(void)
 {
-  memset(walls, 0, sizeof(walls));
-  memset(sectors, 0, sizeof(sectors));  
+	memset(walls, 0, sizeof(walls));
+	memset(sectors, 0, sizeof(sectors));  
 }
 
 void level_read(FILE* fp)
 {
-  char buffer[1024];
-  int type, id, flag, size;
-  
-  level_clear();
+	char buffer[1024];
+	int type, id, flag, size;
+	
+	level_clear();
 
-  while (chunk_read(fp, &type, &id, &flag, buffer, &size))
-  {   
-    if (type == 'WALL')
-    {
-      assert(id < MAX_WALL);
-      memcpy(&walls[id], buffer, size);
-    }
-    if (type == 'SECT')
-    {
-      assert(id < MAX_SECTOR);
-      memcpy(&sectors[id], buffer, size);
-    }
-  }
+	while (chunk_read(fp, &type, &id, &flag, buffer, &size))
+	{   
+		if (type == 'WALL')
+		{
+			assert(id < MAX_WALL);
+			memcpy(&walls[id], buffer, size);
+		}
+		if (type == 'SECT')
+		{
+			assert(id < MAX_SECTOR);
+			memcpy(&sectors[id], buffer, size);
+		}
+	}
 }
 
 void level_save_to_file(PATH fn)
 {
-  FILE* fp = fopen(fn, "wb");
-  
-  if (fp)
-  {
-    level_write(fp);
-    fclose(fp);
-  }
+	FILE* fp = fopen(fn, "wb");
+	
+	if (fp)
+	{
+		level_write(fp);
+		fclose(fp);
+	}
 }
 
 void level_load_from_file(PATH fn)
 {
-  FILE* fp = fopen(fn, "rb");
-  
-  if (fp)
-  {
-    level_read(fp);
-    fclose(fp);
-  }
+	FILE* fp = fopen(fn, "rb");
+	
+	if (fp)
+	{
+		level_read(fp);
+		fclose(fp);
+	}
 }
-

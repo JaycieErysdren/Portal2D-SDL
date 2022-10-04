@@ -20,23 +20,23 @@
 
 typedef struct
 {
-  // Persistent Variables. Moving these variables will break the file format!
-  WORD    lid;
-  WORD    padding;
-  WORD    first_wall;
-  WORD    flags;
-  SURFACE top;
-  SURFACE bot;
-  SURFACE mid;
-  
-  int reserved;
-  
-  // Calculated variables. These variables are not saved out to a file.
-    
-  LONG  vis_id;
-  RECT  bounds;
-  POINT center;
-  LONG  locked;
+	// Persistent Variables. Moving these variables will break the file format!
+	WORD    lid;
+	WORD    padding;
+	WORD    first_wall;
+	WORD    flags;
+	SURFACE top;
+	SURFACE bot;
+	SURFACE mid;
+	
+	int reserved;
+	
+	// Calculated variables. These variables are not saved out to a file.
+		
+	LONG  vis_id;
+	RECT  bounds;
+	POINT center;
+	LONG  locked;
 } SECTOR;
 
 int sector_point_inside(int sid, int x, int y);
@@ -52,4 +52,3 @@ int sectors_are_linked(int s1, int s2);
 void sector_calc_vis(OBJECT* camera);
 
 #endif
-

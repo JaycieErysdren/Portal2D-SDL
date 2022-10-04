@@ -24,33 +24,31 @@ void (__interrupt __far* __keyboard_interrupt)();
 
 void __interrupt __far keyboard_interrupt(void)
 {
-  char c = inp(0x60);
-  keyMap[last_key = c & 0x7F] = !(c & 0x80);
-  outp(0x20, 0x20);
+	char c = inp(0x60);
+	keyMap[last_key = c & 0x7F] = !(c & 0x80);
+	outp(0x20, 0x20);
 }
 
 void keyboard_remove(void)
 {
-  _disable();
-  if (__keyboard_interrupt)
-  {
-    _dos_setvect(9, __keyboard_interrupt);
-    __keyboard_interrupt = 0;
-  }
-  _enable();
+	_disable();
+	if (__keyboard_interrupt)
+	{
+		_dos_setvect(9, __keyboard_interrupt);
+		__keyboard_interrupt = 0;
+	}
+	_enable();
 }
 
 
 void keyboard_install(void)
 {
-  _disable();
-  if (!__keyboard_interrupt)
-  {
-    memset(keyMap, 0, sizeof(keyMap));
-    __keyboard_interrupt = _dos_getvect(9);
-    _dos_setvect(9, keyboard_interrupt);
-  }
-  _enable();
+	_disable();
+	if (!__keyboard_interrupt)
+	{
+		memset(keyMap, 0, sizeof(keyMap));
+		__keyboard_interrupt = _dos_getvect(9);
+		_dos_setvect(9, keyboard_interrupt);
+	}
+	_enable();
 }
-
-

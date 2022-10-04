@@ -23,7 +23,7 @@
 #define SIN_180   1024
 #define SIN_360   2048
 #define SIN_UNIT  i2f(1)
-  
+	
 #define NEXT_WALL(A) (walls[A].next)
 #define FIRST_WALL(A) (sectors[A].first_wall)
 
@@ -55,13 +55,13 @@
 */
 typedef struct
 {
-  int width;
-  int height;
-  int zoom;
-  int zoom_div;
-  int grid; 
-  int key;
-  PALLETE palette;
+	int width;
+	int height;
+	int zoom;
+	int zoom_div;
+	int grid; 
+	int key;
+	PALLETE palette;
 } VIEW;
 
 extern VIEW view;
@@ -70,8 +70,5 @@ int sector_make(VECTOR pts[], int n);
 int world_split(int x1, int y1, int x2, int y2);
 
 void editor_execute();
-  
+	
 #endif
-
-
-

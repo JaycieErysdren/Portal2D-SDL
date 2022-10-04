@@ -18,14 +18,14 @@
 
 typedef struct
 {
-  LONG x, xx, xxx;
-  LONG y, yy, yyy;
-  LONG z, zz, zzz;
-  VECTOR rot;
-  LONG sid;
-  LONG flags;  
-  SURFACE front;
-  SURFACE back;
+	LONG x, xx, xxx;
+	LONG y, yy, yyy;
+	LONG z, zz, zzz;
+	VECTOR rot;
+	LONG sid;
+	LONG flags;  
+	SURFACE front;
+	SURFACE back;
 } OBJECT;
 
 void object_local_space(OBJECT* object, MATRIX matrix);
@@ -34,4 +34,3 @@ void object_update(OBJECT* object);
 void object_collision(OBJECT* object);
 
 #endif
-

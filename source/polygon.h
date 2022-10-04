@@ -17,12 +17,12 @@
 
 typedef struct
 {
-  LONG x;
-  LONG y;
-  LONG z;
-  LONG u;
-  LONG v;
-  LONG w;
+	LONG x;
+	LONG y;
+	LONG z;
+	LONG u;
+	LONG v;
+	LONG w;
 } VERTEX;
 
 #define MAX_POLYGON 60
@@ -34,4 +34,3 @@ int polygon_clip_to_frustum(POLYGON dst, POLYGON src, int n);
 void polygon_project(POLYGON dst, POLYGON src, int n, int width, int height, SURFACE* surface);
 
 #endif
-

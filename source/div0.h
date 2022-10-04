@@ -65,7 +65,3 @@ extern int div0_set_saturate( void *div_addr );
 extern int div0_num_handled_by_cblist;
 extern int div0_num_handled_by_satlist;
 extern int div0_num_saturated;
-
-
-
-

@@ -39,39 +39,38 @@ int fixdot3(int, int, int, int, int, int);
 #ifdef __WATCOMC__
 
 #pragma aux fixinv =       \
-    "xor eax, eax"          \
-    "mov edx, 1"            \
-    "idiv ebx"              \
-    parm caller [ebx]       \
-    value [eax]             \
-    modify [eax ebx edx];
-  
+		"xor eax, eax"          \
+		"mov edx, 1"            \
+		"idiv ebx"              \
+		parm caller [ebx]       \
+		value [eax]             \
+		modify [eax ebx edx];
+	
 #pragma aux fixmul parm [eax] [edx] = \
-  "imul edx"        \
-  "shrd eax,edx,16";
+	"imul edx"        \
+	"shrd eax,edx,16";
 
 #pragma aux fixdiv parm [eax] [ebx] modify exact [eax edx] = \
-  "mov  edx,eax"  \
-  "sar  edx,16" \
-  "shl  eax,16" \
-  "idiv ebx";
+	"mov  edx,eax"  \
+	"sar  edx,16" \
+	"shl  eax,16" \
+	"idiv ebx";
 
 #pragma aux fixdot3 =\
-  "imul edx",\
-  "xchg eax, ebx",\
-  "xchg edx, ecx",\
-  "imul edx",\
-  "add ebx, eax",\
-  "adc ecx, edx",\
-  "mov eax, esi",\
-  "imul edi",\
-  "add eax, ebx",\
-  "adc edx, ecx",\
-  "shrd eax, edx, 16",\
-  parm nomemory [eax][edx][ebx][ecx][esi][edi]\
-  modify exact [eax ebx ecx edx];
+	"imul edx",\
+	"xchg eax, ebx",\
+	"xchg edx, ecx",\
+	"imul edx",\
+	"add ebx, eax",\
+	"adc ecx, edx",\
+	"mov eax, esi",\
+	"imul edi",\
+	"add eax, ebx",\
+	"adc edx, ecx",\
+	"shrd eax, edx, 16",\
+	parm nomemory [eax][edx][ebx][ecx][esi][edi]\
+	modify exact [eax ebx ecx edx];
 
 #endif
 
 #endif
-

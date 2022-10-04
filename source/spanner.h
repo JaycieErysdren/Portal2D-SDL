@@ -17,22 +17,21 @@
 
 typedef struct
 {
-  int x1, x2;
+	int x1, x2;
 } span_t;
 
 typedef struct
 {
-  int nspans;
-  span_t spans[100];
+	int nspans;
+	span_t spans[100];
 } span_array_t;
 
 typedef struct
 {
-  int width;
-  int height;
-  int ngaps;
-  span_array_t* lines;
+	int width;
+	int height;
+	int ngaps;
+	span_array_t* lines;
 } spanner_t;
 
 #endif
-
