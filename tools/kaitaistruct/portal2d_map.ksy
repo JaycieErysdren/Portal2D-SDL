@@ -73,9 +73,15 @@ types:
     seq:
       - id: side_id
         type: u2
+      - id: padding_1
+        type: u2
       - id: next_wall_id
         type: u2
+      - id: padding_2
+        type: u2
       - id: portal_id
+        type: u2
+      - id: padding_3
         type: u2
       - id: x
         type: s4
@@ -83,10 +89,6 @@ types:
         type: s4
       - id: surface
         type: surface_t
-      - id: reserved
-        size: 4
-      - id: terminator
-        contents: [0, 0]
 
   sector_t:
     seq:
