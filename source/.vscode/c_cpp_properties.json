@@ -1,0 +1,28 @@
+// ========================================================
+//
+// FILE:			/source/.vscode/c_cpp_properties.json
+//
+// AUTHORS:			Jaycie Ewald
+//
+// PROJECT:			Portal2D-SDL
+//
+// LICENSE:			ACSL 1.4
+//
+// DESCRIPTION:		VSCode C / C++ settings.
+//
+// LAST EDITED:		October 3rd, 2022
+//
+// ========================================================
+
+{
+	"configurations": [
+		{
+			"name": "DOS32",
+			"includePath": [
+				"${workspaceFolder}/**",
+				"/usr/bin/watcom/h/**"
+			]
+		}
+	],
+	"version": 4
+}

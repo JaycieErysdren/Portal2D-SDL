@@ -1,0 +1,27 @@
+// ========================================================
+//
+// FILE:			/source/.vscode/settings.json
+//
+// AUTHORS:			Jaycie Ewald
+//
+// PROJECT:			Portal2D-SDL
+//
+// LICENSE:			ACSL 1.4
+//
+// DESCRIPTION:		VSCode settings.
+//
+// LAST EDITED:		October 3rd, 2022
+//
+// ========================================================
+
+{
+	"C_Cpp.errorSquiggles": "Disabled",
+	"files.exclude": {
+		"**/*.err": true,
+		"**/*.exe": true,
+		"**/*.lnk": true,
+		"**/*.obj": true,
+		"**/*.o": true,
+		"**/*.lib": true
+   }
+}
