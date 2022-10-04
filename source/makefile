@@ -73,3 +73,11 @@ $(TARGET_EXEC).lnk: makefile
 	echo system dos4g >>$(TARGET_EXEC).lnk
 	for %i in ($(OBJS)) do echo file %i >>$(TARGET_EXEC).lnk
 	for %i in ($(LIBS)) do echo library %i >>$(TARGET_EXEC).lnk
+
+clean: .SYMBOLIC
+	rm *.obj
+	rm *.o
+	rm *.lnk
+	rm *.rsp
+	rm *.err
+	rm *.exe
