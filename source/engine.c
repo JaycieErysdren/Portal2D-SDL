@@ -46,7 +46,7 @@
 #include "matrix.h"
 #include "polygon.h"
 #include "picture.h"
-#include "dos.h"
+#include "dev_io.h"
 #include "pragmas.h"
 #include "fix.h"
 #include "math.h"
@@ -526,11 +526,11 @@ void render_view(OBJECT* camera)
 
 		object_render(2, matrix);
 	}
+
 	console_render();
 
 	mouse_read(&x, &y);
 
-	// don't draw the mouse
 	//picture_draw8(&pic_bbuffer, &pic_arrow, x, y, PICTURE_MODE_COLORKEY);
 
 	// Copy view buffer to video memory.
@@ -544,7 +544,7 @@ void show_logo(void)
 
 	picture_load_from_file(&pic_logo, "images/logo.pcx", palette);
 
-	vga_install(0x13);
+	graphics_install(GFX_DEFAULT);
 	palette_install(palette);
 
 	picture_draw8(&pic_fbuffer, &pic_logo, 0, 0, PICTURE_MODE_COPY);
@@ -568,7 +568,7 @@ void engine_destroy(void)
 
 	mouse_show(0);
 
-	_setvideomode(_DEFAULTMODE);
+	graphics_remove();
 
 	exit(EXIT_SUCCESS);
 }
@@ -591,7 +591,7 @@ void engine_execute(void)
 
 	mouse_show(0);
 
-	vga_install(VGA_MODE13);
+	graphics_install(GFX_DEFAULT);
 
 	picture_create(&pic_fbuffer, 320, 200, 8, 0, (void*) 0xA0000);
 
@@ -649,6 +649,7 @@ void engine_execute(void)
 		// reset position after reading it
 		mouse_set(&half_x, &half_y);
 
+		#ifdef REX_DOS
 		sprintf(sbuf, "Key:%3d X:%4d Y:%4d Z:%4d SID:%d",
 			last_key,
 			camera->x,
@@ -662,6 +663,7 @@ void engine_execute(void)
 
 		sprintf(sbuf, "%d %d FPS: %d", floor_z, ceil_z, imuldiv(frame_count++, 120, timer + 1));
 		console_outtext(0, 1, sbuf);
+		#endif
 
 		for (; tick < timer; tick++)
 		{
@@ -853,7 +855,9 @@ void engine_execute(void)
 				}
 			#endif
 
-			memcpy(keyprev, keydown, sizeof(keyprev));
+			#ifdef REX_DOS
+				memcpy(keyprev, keydown, sizeof(keyprev));
+			#endif
 		}
 	}
 }

@@ -6,10 +6,10 @@ find_package(SDL2 REQUIRED)
 link_libraries(${SDL2_LIBRARIES})
 include_directories(${SDL2_INCLUDE_DIRS})
 
+add_compile_definitions("REX_SDL")
+
 set(PORTAL2D_SRC
-	div0.c
-	dos.c
-	editor.c
+	dev_io.c
 	engine.c
 	fix.c
 	level.c

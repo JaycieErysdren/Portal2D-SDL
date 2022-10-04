@@ -14,7 +14,7 @@
 #include "wall.h"
 #include "polygon.h"
 #include "level.h"
-#include "dos.h"
+#include "dev_io.h"
 #include "math.h"
 #include "fix.h"
 

@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		VSCode C / C++ settings.
 //
-// LAST EDITED:		October 3rd, 2022
+// LAST EDITED:		October 4th, 2022
 //
 // ========================================================
 
@@ -21,7 +21,8 @@
 			"includePath": [
 				"${workspaceFolder}/**",
 				"/usr/bin/watcom/h/**"
-			]
+			],
+			"defines": ["REX_SDL"]
 		}
 	],
 	"version": 4

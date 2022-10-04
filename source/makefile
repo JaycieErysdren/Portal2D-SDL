@@ -10,7 +10,7 @@
 #
 # DESCRIPTION:		Portal2D makefile for OWv2
 #
-# LAST EDITED:		October 3rd, 2022
+# LAST EDITED:		October 4th, 2022
 #
 # ========================================================
 
@@ -27,6 +27,7 @@ GBM_DIR=../modules/gbm
 CC=wcc386
 CCFLAGS=-w4 -e25 -zq -otexan -d1 -fp3 -4r -mf -bt=dos&
 	-I$(WATCOM_DIR)/h&
+	-DREX_DOS
 
 # ASM compiler
 AS=wasm
@@ -35,7 +36,7 @@ ASFLAGS=-mf -5r -w4 -e25 -zq
 # Compiled objects to include
 OBJS=&
 	div0.o&
-	dos.o&
+	dev_io.o&
 	editor.o&
 	engine.o&
 	fix.o&
