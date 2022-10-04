@@ -577,9 +577,13 @@ void engine_execute(void)
 {
 	int mouse_x, mouse_y;
 
-	unsigned int half_x = 160, half_y = 100;
+	int half_x = 160, half_y = 100;
 
-	int i, x, y;
+	#ifdef EDITABLE_SURFACES
+	int x, y;
+	#endif
+
+	int i;
 	int floor_z, ceil_z, under;
 	int frame_count = 0;
 
@@ -600,7 +604,10 @@ void engine_execute(void)
 
 	for(i = 0; i < 256; i++)
 	{
-		x = RGB_BRIGHTNESS(palette[i][0], palette[i][1], palette[i][2]);
+		// ??
+		#ifdef EDITABLE_SURFACES
+			x = RGB_BRIGHTNESS(palette[i][0], palette[i][1], palette[i][2]);
+		#endif
 
 		view.palette[i][0] = imin(pow(palette[i][0] / 255.0, 64.0 / 64) * 255.0, 255);
 		view.palette[i][1] = imin(pow(palette[i][1] / 255.0, 64.0 / 64) * 255.0, 255);
@@ -849,8 +856,6 @@ void engine_execute(void)
 			memcpy(keyprev, keydown, sizeof(keyprev));
 		}
 	}
-
-	engine_destroy();
 }
 
 

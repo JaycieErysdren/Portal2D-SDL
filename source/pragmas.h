@@ -80,6 +80,39 @@ int dmulscale30(int, int, int, int);
 int dmulscale31(int, int, int, int);
 int dmulscale32(int, int, int, int);
 
+int tmulscale1 (int, int, int, int, int, int);
+int tmulscale2 (int, int, int, int, int, int);
+int tmulscale3 (int, int, int, int, int, int);
+int tmulscale4 (int, int, int, int, int, int);
+int tmulscale5 (int, int, int, int, int, int);
+int tmulscale6 (int, int, int, int, int, int);
+int tmulscale7 (int, int, int, int, int, int);
+int tmulscale8 (int, int, int, int, int, int);
+int tmulscale9 (int, int, int, int, int, int);
+int tmulscale10(int, int, int, int, int, int);
+int tmulscale11(int, int, int, int, int, int);
+int tmulscale12(int, int, int, int, int, int);
+int tmulscale13(int, int, int, int, int, int);
+int tmulscale14(int, int, int, int, int, int);
+int tmulscale15(int, int, int, int, int, int);
+int tmulscale16(int, int, int, int, int, int);
+int tmulscale17(int, int, int, int, int, int);
+int tmulscale18(int, int, int, int, int, int);
+int tmulscale19(int, int, int, int, int, int);
+int tmulscale20(int, int, int, int, int, int);
+int tmulscale21(int, int, int, int, int, int);
+int tmulscale22(int, int, int, int, int, int);
+int tmulscale23(int, int, int, int, int, int);
+int tmulscale24(int, int, int, int, int, int);
+int tmulscale25(int, int, int, int, int, int);
+int tmulscale26(int, int, int, int, int, int);
+int tmulscale27(int, int, int, int, int, int);
+int tmulscale28(int, int, int, int, int, int);
+int tmulscale29(int, int, int, int, int, int);
+int tmulscale30(int, int, int, int, int, int);
+int tmulscale31(int, int, int, int, int, int);
+int tmulscale32(int, int, int, int, int, int);
+
 #pragma aux scale =\
 	"imul edx",\
 	"idiv ecx",\
