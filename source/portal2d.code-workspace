@@ -19,11 +19,5 @@
 		{
 			"path": "."
 		}
-	],
-	"settings": {
-		"files.associations": {
-			"div0.h": "c",
-			"wall.h": "c"
-		}
-	}
+	]
 }

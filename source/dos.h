@@ -35,6 +35,16 @@
 #define KB_PAGEDN     81
 #define KB_INSERT     82
 #define KB_DELETE     83
+
+#define KB_W          17
+#define KB_A          30
+#define KB_S          31
+#define KB_D          32
+#define KB_SPACE      57
+#define KB_C          46
+
+// 320x200, 256 colors
+#define VGA_MODE13    0x13
       
 extern char keydown[128];
 extern char keyprev[128];

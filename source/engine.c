@@ -530,7 +530,8 @@ void render_view(OBJECT* camera)
 
 	mouse_read(&x, &y);
 
-	picture_draw8(&pic_bbuffer, &pic_arrow, x, y, PICTURE_MODE_COLORKEY);
+	// don't draw the mouse
+	//picture_draw8(&pic_bbuffer, &pic_arrow, x, y, PICTURE_MODE_COLORKEY);
 
 	// Copy view buffer to video memory.
 	picture_copy(&pic_fbuffer, &pic_bbuffer);
@@ -574,6 +575,10 @@ void engine_destroy(void)
 
 void engine_execute(void)
 {
+	int mouse_x, mouse_y;
+
+	unsigned int half_x = 160, half_y = 100;
+
 	int i, x, y;
 	int floor_z, ceil_z, under;
 	int frame_count = 0;
@@ -582,7 +587,7 @@ void engine_execute(void)
 
 	mouse_show(0);
 
-	vga_install(0x13);
+	vga_install(VGA_MODE13);
 
 	picture_create(&pic_fbuffer, 320, 200, 8, 0, (void*) 0xA0000);
 
@@ -595,7 +600,7 @@ void engine_execute(void)
 
 	for(i = 0; i < 256; i++)
 	{
-		x = RGB_BRIGHTNESS(palette[i][0],palette[i][1],palette[i][2]);
+		x = RGB_BRIGHTNESS(palette[i][0], palette[i][1], palette[i][2]);
 
 		view.palette[i][0] = imin(pow(palette[i][0] / 255.0, 64.0 / 64) * 255.0, 255);
 		view.palette[i][1] = imin(pow(palette[i][1] / 255.0, 64.0 / 64) * 255.0, 255);
@@ -632,7 +637,10 @@ void engine_execute(void)
 		picture_blend8(&textures[114], &textures[41], &textures[64], blender);
 
 		render_view(camera);
-		mouse_read(&x, &y);
+		mouse_read(&mouse_x, &mouse_y);
+
+		// reset position after reading it
+		mouse_set(&half_x, &half_y);
 
 		sprintf(sbuf, "Key:%3d X:%4d Y:%4d Z:%4d SID:%d",
 			last_key,
@@ -646,7 +654,6 @@ void engine_execute(void)
 		sector_z(camera->sid, camera->x, camera->y, &floor_z, &ceil_z, 0);
 
 		sprintf(sbuf, "%d %d FPS: %d", floor_z, ceil_z, imuldiv(frame_count++, 120, timer + 1));
-
 		console_outtext(0, 1, sbuf);
 
 		for (; tick < timer; tick++)
@@ -663,6 +670,7 @@ void engine_execute(void)
 
 			under = ((camera->z - 300) << 6) - floor_z;
 
+			// movement controls
 			if (under < 0)
 			{
 				camera->xx -= camera->xx / 18;
@@ -673,31 +681,31 @@ void engine_execute(void)
 
 				camera->zz &= 0xFFFFF000;
 
-				if (KEY_DOWN(KB_UPARROW))
+				if (KEY_DOWN(KB_W))
 				{
 					camera->xx += imuldiv(fixsin(camera->rot.y), 6, 8);
 					camera->yy += imuldiv(fixcos(camera->rot.y), 6, 8);
 				}
-				if (KEY_DOWN(KB_DNARROW))
+				if (KEY_DOWN(KB_S))
 				{
 					camera->xx -= imuldiv(fixsin(camera->rot.y), 6, 8);
 					camera->yy -= imuldiv(fixcos(camera->rot.y), 6, 8);
 				}
-				if (KEY_DOWN(51))
+				if (KEY_DOWN(KB_A))
 				{
 					camera->xx -= imuldiv(fixcos(camera->rot.y), 6, 8);
 					camera->yy += imuldiv(fixsin(camera->rot.y), 6, 8);
 				}
-				if (KEY_DOWN(52))
+				if (KEY_DOWN(KB_D))
 				{
 					camera->xx += imuldiv(fixcos(camera->rot.y), 6, 8);
 					camera->yy -= imuldiv(fixsin(camera->rot.y), 6, 8);
 				}
-				if (KEY_PRESSED(57)) // Jump
+				if (KEY_PRESSED(KB_SPACE)) // Jump
 				{
 					camera->zz += fl2f(15);
 				}
-				if (KEY_DOWN(46)) // Crouch
+				if (KEY_DOWN(KB_CTRL)) // Crouch
 				{
 					camera->zz -= fl2f(0.7);
 				}
@@ -705,130 +713,139 @@ void engine_execute(void)
 
 			if (KEY_PRESSED(88)) picture_save_to_file(&pic_bbuffer, "screen.pcx", view.palette);
 
+			// view controls
+			camera->rot.y += (mouse_x - half_x);
+			camera->rot.x -= (mouse_y - half_y);
 
-			if (KEY_DOWN(30) && camera->rot.x <  320) camera->rot.x += 7;
-			if (KEY_DOWN(44) && camera->rot.x > -320) camera->rot.x -= 7;
-			if (KEY_DOWN(KB_RTARROW)) camera->rot.y += 7;
-			if (KEY_DOWN(KB_LTARROW)) camera->rot.y -= 7;
+			if (camera->rot.x > 320) camera->rot.x = 320;
+			else if (camera->rot.x < -320) camera->rot.x = -320;
+
+			//if (KEY_DOWN(30) && camera->rot.x <  320) camera->rot.x += 7;
+			//if (KEY_DOWN(44) && camera->rot.x > -320) camera->rot.x -= 7;
+			//if (KEY_DOWN(KB_RTARROW)) camera->rot.y += 7;
+			//if (KEY_DOWN(KB_LTARROW)) camera->rot.y -= 7;
 
 			if (KEY_DOWN(KB_ESC)) engine_destroy();
 
-#define SURFACE_EDIT(VAR,SUR,A) (clipboard.VAR = (SUR.VAR = KEY_DOWN(KB_CTRL) ? clipboard.VAR : SUR.VAR + (KEY_DOWN(KB_LTSHIFT) ? -(A) : (A))))
+			#ifdef EDITABLE_SURFACES
+				#define SURFACE_EDIT(VAR,SUR,A) (clipboard.VAR = (SUR.VAR = KEY_DOWN(KB_CTRL) ? clipboard.VAR : SUR.VAR + (KEY_DOWN(KB_LTSHIFT) ? -(A) : (A))))
 
-			if (KEY_PRESSED(24)) // Opacity
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+				if (KEY_PRESSED(24)) // Opacity
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 3) sectors[id].mid  .flags ^= SURFACE_OPAQUE;
-				if ((code >> 12) == 8) objects[id].front.flags ^= SURFACE_OPAQUE;
-				if ((code >> 12) == 9) objects[id].back .flags ^= SURFACE_OPAQUE;
-			}
-			if (KEY_PRESSED(20)) // Texture
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+					if ((code >> 12) == 3) sectors[id].mid  .flags ^= SURFACE_OPAQUE;
+					if ((code >> 12) == 8) objects[id].front.flags ^= SURFACE_OPAQUE;
+					if ((code >> 12) == 9) objects[id].back .flags ^= SURFACE_OPAQUE;
+				}
+				if (KEY_PRESSED(20)) // Texture
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 0) SURFACE_EDIT(texture, walls  [id].surface, 1);
-				if ((code >> 12) == 1) SURFACE_EDIT(texture, sectors[id].bot    , 1);
-				if ((code >> 12) == 2) SURFACE_EDIT(texture, sectors[id].top    , 1);
-				if ((code >> 12) == 3) SURFACE_EDIT(texture, sectors[id].mid    , 1);
+					if ((code >> 12) == 0) SURFACE_EDIT(texture, walls  [id].surface, 1);
+					if ((code >> 12) == 1) SURFACE_EDIT(texture, sectors[id].bot    , 1);
+					if ((code >> 12) == 2) SURFACE_EDIT(texture, sectors[id].top    , 1);
+					if ((code >> 12) == 3) SURFACE_EDIT(texture, sectors[id].mid    , 1);
 
-				if ((code >> 12) == 8) SURFACE_EDIT(texture, objects[id].front  , 1);
-				if ((code >> 12) == 9) SURFACE_EDIT(texture, objects[id].back   , 1);
-			}
-			if (KEY_PRESSED(45)) // X Repeat
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+					if ((code >> 12) == 8) SURFACE_EDIT(texture, objects[id].front  , 1);
+					if ((code >> 12) == 9) SURFACE_EDIT(texture, objects[id].back   , 1);
+				}
+				if (KEY_PRESSED(45)) // X Repeat
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 0) SURFACE_EDIT(repeatx, walls  [id].surface, 1);
-				if ((code >> 12) == 1) SURFACE_EDIT(repeatx, sectors[id].bot    , 1);
-				if ((code >> 12) == 2) SURFACE_EDIT(repeatx, sectors[id].top    , 1);
-			}
-			if (KEY_PRESSED(21)) // Y Repeat
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+					if ((code >> 12) == 0) SURFACE_EDIT(repeatx, walls  [id].surface, 1);
+					if ((code >> 12) == 1) SURFACE_EDIT(repeatx, sectors[id].bot    , 1);
+					if ((code >> 12) == 2) SURFACE_EDIT(repeatx, sectors[id].top    , 1);
+				}
+				if (KEY_PRESSED(21)) // Y Repeat
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 0) SURFACE_EDIT(repeaty, walls  [id].surface, 1);
-				if ((code >> 12) == 1) SURFACE_EDIT(repeaty, sectors[id].bot    , 1);
-				if ((code >> 12) == 2) SURFACE_EDIT(repeaty, sectors[id].top    , 1);
-			}
+					if ((code >> 12) == 0) SURFACE_EDIT(repeaty, walls  [id].surface, 1);
+					if ((code >> 12) == 1) SURFACE_EDIT(repeaty, sectors[id].bot    , 1);
+					if ((code >> 12) == 2) SURFACE_EDIT(repeaty, sectors[id].top    , 1);
+				}
 
-			if (KEY_PRESSED(35)) // X Panning
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+				if (KEY_PRESSED(35)) // X Panning
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 0) SURFACE_EDIT(panningx, walls  [id].surface, i2f(16));
-				if ((code >> 12) == 1) SURFACE_EDIT(panningx, sectors[id].bot    , i2f(16));
-				if ((code >> 12) == 2) SURFACE_EDIT(panningx, sectors[id].top    , i2f(16));
-			}
-			if (KEY_PRESSED(47)) // Y Panning
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+					if ((code >> 12) == 0) SURFACE_EDIT(panningx, walls  [id].surface, i2f(16));
+					if ((code >> 12) == 1) SURFACE_EDIT(panningx, sectors[id].bot    , i2f(16));
+					if ((code >> 12) == 2) SURFACE_EDIT(panningx, sectors[id].top    , i2f(16));
+				}
+				if (KEY_PRESSED(47)) // Y Panning
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 0) SURFACE_EDIT(panningy, walls  [id].surface, i2f(16));
-				if ((code >> 12) == 1) SURFACE_EDIT(panningy, sectors[id].bot    , i2f(16));
-				if ((code >> 12) == 2) SURFACE_EDIT(panningy, sectors[id].top    , i2f(16));
-			}
-			if (KEY_PRESSED(38)) // Light (Brightness)
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+					if ((code >> 12) == 0) SURFACE_EDIT(panningy, walls  [id].surface, i2f(16));
+					if ((code >> 12) == 1) SURFACE_EDIT(panningy, sectors[id].bot    , i2f(16));
+					if ((code >> 12) == 2) SURFACE_EDIT(panningy, sectors[id].top    , i2f(16));
+				}
+				if (KEY_PRESSED(38)) // Light (Brightness)
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 0) SURFACE_EDIT(light, walls  [id].surface, 1);
-				if ((code >> 12) == 1) SURFACE_EDIT(light, sectors[id].bot    , 1);
-				if ((code >> 12) == 2) SURFACE_EDIT(light, sectors[id].top    , 1);
-			}
+					if ((code >> 12) == 0) SURFACE_EDIT(light, walls  [id].surface, 1);
+					if ((code >> 12) == 1) SURFACE_EDIT(light, sectors[id].bot    , 1);
+					if ((code >> 12) == 2) SURFACE_EDIT(light, sectors[id].top    , 1);
+				}
 
-			if (KEY_PRESSED(KB_INSERT))
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+				if (KEY_PRESSED(KB_INSERT))
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 1) sectors[id].bot.slopex += 4;
-				if ((code >> 12) == 2) sectors[id].top.slopex += 4;
-				if ((code >> 12) == 3) sectors[id].mid.slopex += 4;
-			}
-			if (KEY_PRESSED(KB_DELETE))
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+					if ((code >> 12) == 1) sectors[id].bot.slopex += 4;
+					if ((code >> 12) == 2) sectors[id].top.slopex += 4;
+					if ((code >> 12) == 3) sectors[id].mid.slopex += 4;
+				}
+				if (KEY_PRESSED(KB_DELETE))
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 1) sectors[id].bot.slopex -= 4;
-				if ((code >> 12) == 2) sectors[id].top.slopex -= 4;
-				if ((code >> 12) == 3) sectors[id].mid.slopex -= 4;
-			}
-			if (KEY_PRESSED(KB_HOME))
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+					if ((code >> 12) == 1) sectors[id].bot.slopex -= 4;
+					if ((code >> 12) == 2) sectors[id].top.slopex -= 4;
+					if ((code >> 12) == 3) sectors[id].mid.slopex -= 4;
+				}
+				if (KEY_PRESSED(KB_HOME))
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 1) sectors[id].bot.slopey += 4;
-				if ((code >> 12) == 2) sectors[id].top.slopey += 4;
-				if ((code >> 12) == 3) sectors[id].mid.slopey += 4;
-			}
-			if (KEY_PRESSED(KB_END))
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+					if ((code >> 12) == 1) sectors[id].bot.slopey += 4;
+					if ((code >> 12) == 2) sectors[id].top.slopey += 4;
+					if ((code >> 12) == 3) sectors[id].mid.slopey += 4;
+				}
+				if (KEY_PRESSED(KB_END))
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 1) sectors[id].bot.slopey -= 4;
-				if ((code >> 12) == 2) sectors[id].top.slopey -= 4;
-				if ((code >> 12) == 3) sectors[id].mid.slopey -= 4;
-			}
-			if (KEY_PRESSED(KB_PAGEUP))
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+					if ((code >> 12) == 1) sectors[id].bot.slopey -= 4;
+					if ((code >> 12) == 2) sectors[id].top.slopey -= 4;
+					if ((code >> 12) == 3) sectors[id].mid.slopey -= 4;
+				}
+				if (KEY_PRESSED(KB_PAGEUP))
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 1) SURFACE_EDIT(slopez, sectors[id].bot, -WORLD_UNIT);
-				if ((code >> 12) == 2) SURFACE_EDIT(slopez, sectors[id].top, -WORLD_UNIT);
-				if ((code >> 12) == 3) SURFACE_EDIT(slopez, sectors[id].mid, -WORLD_UNIT);
-			}
-			if (KEY_PRESSED(KB_PAGEDN))
-			{
-				WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
+					if ((code >> 12) == 1) SURFACE_EDIT(slopez, sectors[id].bot, -WORLD_UNIT);
+					if ((code >> 12) == 2) SURFACE_EDIT(slopez, sectors[id].top, -WORLD_UNIT);
+					if ((code >> 12) == 3) SURFACE_EDIT(slopez, sectors[id].mid, -WORLD_UNIT);
+				}
+				if (KEY_PRESSED(KB_PAGEDN))
+				{
+					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-				if ((code >> 12) == 1) SURFACE_EDIT(slopez, sectors[id].bot,  WORLD_UNIT);
-				if ((code >> 12) == 2) SURFACE_EDIT(slopez, sectors[id].top,  WORLD_UNIT);
-				if ((code >> 12) == 3) SURFACE_EDIT(slopez, sectors[id].mid,  WORLD_UNIT);
-			}
-			if (KEY_PRESSED(50))
-			{
-				sectors[camera->sid].flags ^= SECTOR_RENDER_MIDDLE;
-			}
+					if ((code >> 12) == 1) SURFACE_EDIT(slopez, sectors[id].bot,  WORLD_UNIT);
+					if ((code >> 12) == 2) SURFACE_EDIT(slopez, sectors[id].top,  WORLD_UNIT);
+					if ((code >> 12) == 3) SURFACE_EDIT(slopez, sectors[id].mid,  WORLD_UNIT);
+				}
+				if (KEY_PRESSED(50))
+				{
+					sectors[camera->sid].flags ^= SECTOR_RENDER_MIDDLE;
+				}
+			#endif
+
 			memcpy(keyprev, keydown, sizeof(keyprev));
 		}
 	}

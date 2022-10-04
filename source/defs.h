@@ -38,6 +38,7 @@
 
 #undef min
 #undef max
+
 /*
 ** Simple Datatypes
 */
@@ -52,19 +53,19 @@ typedef char PATH[1024];
 
 typedef struct
 {
-  LONG x, y;
+	LONG x, y;
 } POINT;
 
 typedef struct
 {
-  LONG x1, y1, x2, y2;
+	LONG x1, y1, x2, y2;
 } RECT;
 
 typedef struct
 {
-  LONG x, xx, xxx;
-  LONG y, yy, yyy;
-  LONG z, zz, zzz;
+	LONG x, xx, xxx;
+	LONG y, yy, yyy;
+	LONG z, zz, zzz;
 } MOTION;
 
 typedef BYTE CLUT[256][256];
@@ -73,6 +74,6 @@ typedef BYTE LIGHTMAP[32][256];
 typedef BYTE TEXTURE66[64][64];
 
 #define TEXEL66(A,X,Y) *((BYTE*)A+((Y>>10)&(63<<6))+((X>>16)&63))
-  
+	
 #endif
 
