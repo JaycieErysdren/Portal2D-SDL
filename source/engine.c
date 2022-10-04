@@ -38,7 +38,7 @@
 **  - Sector based terain render. Create mesh from bitmap.
 */
 
-#include "div/div0.h"
+#include "div0.h"
 #include "engine.h"
 #include "wall.h"
 #include "sector.h"

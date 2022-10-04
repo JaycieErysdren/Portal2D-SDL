@@ -1,3 +1,16 @@
 /_local/
 *.blend1
 /**/__pycache__/
+
+/cmake-build-*/
+
+*.o
+*.O
+*.obj
+*.OBJ
+*.err
+*.ERR
+*.lnk
+*.LNK
+*.rsp
+*.RSP

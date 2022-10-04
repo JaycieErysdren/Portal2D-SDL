@@ -11,7 +11,7 @@
 */
 
 #include "picture.h"
-#include "../gbm/gbmsrc/gbm.h"
+#include "../modules/gbm/gbm.h"
 #include "fix.h"
 #include "math.h"
 #include <fcntl.h>
