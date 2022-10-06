@@ -20,9 +20,12 @@
 			"name": "DOS32",
 			"includePath": [
 				"${workspaceFolder}/**",
+				"${workspaceFolder}/inc/**",
+				"${workspaceFolder}/../modules/gbm/**",
+				"${workspaceFolder}/../modules/div0/**",
 				"/usr/bin/watcom/h/**"
 			],
-			"defines": ["REX_SDL"]
+			"defines": ["REX_DOS", "__WATCOMC__"]
 		}
 	],
 	"version": 4

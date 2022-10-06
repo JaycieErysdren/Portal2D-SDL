@@ -1,6 +1,6 @@
 # ========================================================
 #
-# FILE:				makefile
+# FILE:				/source/makefile
 #
 # AUTHORS:			Jaycie Ewald
 #
@@ -10,23 +10,27 @@
 #
 # DESCRIPTION:		Portal2D makefile for OWv2
 #
-# LAST EDITED:		October 4th, 2022
+# LAST EDITED:		October 6th, 2022
 #
 # ========================================================
 
 # Target executable
-TARGET_EXEC=game.exe
+TARGET_EXEC=game2.exe
 TARGET_PATH=../game
 TARGET=$(TARGET_PATH)/$(TARGET_EXEC)
 
 # Include directories
 WATCOM_DIR=/usr/bin/watcom
 GBM_DIR=../modules/gbm
+DIV0_DIR=../modules/div0
 
 # C compiler
 CC=wcc386
 CCFLAGS=-w4 -e25 -zq -otexan -d1 -fp3 -4r -mf -bt=dos&
+	-Iinc&
 	-I$(WATCOM_DIR)/h&
+	-I$(GBM_DIR)&
+	-I$(DIV0_DIR)&
 	-DREX_DOS
 
 # ASM compiler
@@ -35,24 +39,27 @@ ASFLAGS=-mf -5r -w4 -e25 -zq
 
 # Compiled objects to include
 OBJS=&
-	div0.o&
-	dev_io.o&
-	editor.o&
-	engine.o&
-	fix.o&
-	level.o&
-	math.o&
-	matrix.o&
-	object.o&
-	picture.o&
-	polygon.o&
-	sector.o&
+	utils.o&
 	sintable.o&
-	spanner.o&
+	math_x.o&
+	math_i.o&
+	matrix.o&
+	polygon.o&
 	wall.o&
+	sector.o&
+	spanner.o&
+	picture.o&
+	object.o&
+	dev_io.o&
+	file_io.o&
+	console.o&
+	render.o&
+	engine.o&
+	main.o&
 
 LIBS=&
 	$(GBM_DIR)/gbm.lib&
+	$(DIV0_DIR)/div0.lib&
 
 # C rules
 .c.o:
