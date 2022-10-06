@@ -44,6 +44,10 @@ void main(int argc, char *argv[])
 			if (view.key == 'q') break;
 		}
 	}
+	else
+	{
+		say("No input map specified.");
+	}
 
 	RexEngineDestroy();
 

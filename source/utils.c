@@ -16,8 +16,21 @@
 
 #include "rex.h"
 
+#ifdef REX_SDL
+
+void say(char* s)
+{
+	printf("%s\n", s);
+}
+
+#endif
+
+#ifdef REX_DOS
+
 void say(char* s)
 {
 	_outtext(s);
 	_outtext("\n");
 }
+
+#endif

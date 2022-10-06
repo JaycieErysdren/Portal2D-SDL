@@ -21,6 +21,18 @@ typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
 
+#ifdef REX_SDL
+
+typedef long INT64;
+
+#endif
+
+#ifdef REX_DOS
+
+typedef __int64 INT64;
+
+#endif
+
 typedef char STRING[256];
 typedef char PATH[1024];
 
