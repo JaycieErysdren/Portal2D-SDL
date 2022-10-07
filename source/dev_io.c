@@ -148,7 +148,6 @@
 		_enable();
 	}
 
-
 	void RexKeyboardInstall(void)
 	{
 		_disable();
@@ -162,16 +161,45 @@
 		_enable();
 	}
 
+	//
 	// Graphics routines
+	//
+
 	void RexGraphicsInstall(int mode)
 	{
-		regs.x.eax = mode;
-		int386(0x10, &regs, &regs);
+		_setvideomode(mode);
+		//regs.x.eax = mode;
+		//int386(0x10, &regs, &regs);
 	}
 
 	void RexGraphicsRemove(void)
 	{
 		_setvideomode(_DEFAULTMODE);
+	}
+
+	void RexPaletteLoad(char *filename)
+	{
+		FILE *palette_file;
+		long setpal[256];
+		int i;
+
+		palette_file = fopen(filename, "rb");
+
+		if (palette_file == NULL)
+			fail("Failed to load palette file %s", filename);
+
+		for (i = 0; i < 256; i++)
+		{
+			unsigned char r = getc(palette_file);
+			unsigned char g = getc(palette_file);
+			unsigned char b = getc(palette_file);
+
+			palette[i][0] = r;
+			palette[i][1] = g;
+			palette[i][2] = b;
+		}
+
+		fclose(palette_file);
 	}
 
 	void RexPaletteInstall(PALETTE palette)

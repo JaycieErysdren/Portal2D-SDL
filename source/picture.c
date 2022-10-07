@@ -106,7 +106,7 @@ void RexPictureLoad(PICTURE* picture, PATH filename, PALETTE palette)
 			{
 				RexPictureCreate(picture, gbm.w, gbm.h, gbm.bpp, 0, 0);
 
-				if (gbm_read_data(file, filetype, &gbm, (BYTE*) picture->buffer) == GBM_ERR_OK)
+				if (gbm_read_data(file, filetype, &gbm, (BYTE *)picture->buffer) == GBM_ERR_OK)
 				{
 					GBMRGB gbmrgb[256];
 
@@ -115,9 +115,10 @@ void RexPictureLoad(PICTURE* picture, PATH filename, PALETTE palette)
 						int i;
 						for (i = 0; i < 256; i++)
 						{
-							palette[i][0] = gbmrgb[i].r;
-							palette[i][1] = gbmrgb[i].g;
-							palette[i][2] = gbmrgb[i].b;
+							// nah
+							//palette[i][0] = gbmrgb[i].r;
+							//palette[i][1] = gbmrgb[i].g;
+							//palette[i][2] = gbmrgb[i].b;
 						}
 					}
 				}

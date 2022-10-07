@@ -19,5 +19,12 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"files.associations": {
+			"rex.h": "c",
+			"engine.h": "c",
+			"cmath": "c"
+		}
+	}
 }

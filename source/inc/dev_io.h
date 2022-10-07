@@ -84,6 +84,7 @@
 	void RexGraphicsRemove(void);
 
 	// Palette functions
+	void RexPaletteLoad(char *filename);
 	void RexPaletteInstall(PALETTE palette);
 
 #endif

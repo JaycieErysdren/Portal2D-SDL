@@ -201,6 +201,8 @@ extern PICTURE					pic_sky;
 extern PICTURE					pic_console;
 extern PICTURE					pic_font;
 
+extern PALETTE					palette;
+
 // Definitions
 #define RENDER_RECIPROCAL
 

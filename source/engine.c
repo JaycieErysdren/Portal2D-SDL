@@ -129,9 +129,9 @@ void RexEngineExecute(void)
 
 	RexMouseShow(0);
 
-	RexGraphicsInstall(GFX_DEFAULT);
+	RexGraphicsInstall(_MRES256COLOR);
 
-	RexPictureCreate(&pic_fbuffer, 320, 200, 8, 0, (void*) 0xA0000);
+	RexPictureCreate(&pic_fbuffer, 320, 200, 8, 0, (void *)0xA0000);
 
 	RexPictureCreate(&pic_bbuffer, 320, 200, 8, 0, 0);
 
@@ -140,6 +140,7 @@ void RexEngineExecute(void)
 
 	RexPictureCreate(&pic_console, 40, 10, 8, 0, 0);
 
+	/* dumb
 	for(i = 0; i < 256; i++)
 	{
 		// ??
@@ -155,8 +156,9 @@ void RexEngineExecute(void)
 		view.palette[i][1] = imin(imuldiv(palette[i][1], 128, 255), 255);
 		view.palette[i][2] = imin(imuldiv(palette[i][2], 255, 255), 255);
 	}
+	*/
 
-	RexPaletteInstall(view.palette);
+	RexPaletteInstall(palette);
 
 	RexKeyboardInstall();
 	RexTimerInstall(120);
@@ -258,7 +260,7 @@ void RexEngineExecute(void)
 				}
 			}
 
-			if (KEY_PRESSED(88)) RexPictureSave(&pic_bbuffer, "screen.pcx", view.palette);
+			//if (KEY_PRESSED(88)) RexPictureSave(&pic_bbuffer, "screen.pcx", view.palette);
 
 			// view controls
 			camera->rot.y += (mouse_x - half_x);
@@ -419,6 +421,9 @@ void RexEngineCreate(void)
 	RexPictureLoad(&pic_sky  , "images/sky.pcx"    , palette);
 	//RexPictureLoad(&pic_arrow, "images/arrow.pcx"  , palette);
 	//RexPictureLoad(&pic_lens , "images/lens.pcx"   , palette);
+
+	say("Installing palette.");
+	RexPaletteLoad("gfx/palette.dat");
 
 	say("Loading textures.");
 
