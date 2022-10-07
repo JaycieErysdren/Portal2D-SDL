@@ -16,3 +16,4 @@
 
 void say(char* s);
 void fail(char *s, ...);
+void fskip(FILE *fp, int num_bytes);

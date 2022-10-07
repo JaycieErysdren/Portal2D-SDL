@@ -23,6 +23,7 @@
 				"${workspaceFolder}/inc/**",
 				"${workspaceFolder}/../modules/gbm/**",
 				"${workspaceFolder}/../modules/div0/**",
+				"${workspaceFolder}/../modules/drlibs/**",
 				"/usr/bin/watcom/h/**"
 			],
 			"defines": ["REX_DOS", "__WATCOMC__"]
