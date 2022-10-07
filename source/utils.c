@@ -16,21 +16,16 @@
 
 #include "rex.h"
 
-#ifdef REX_SDL
-
 void say(char* s)
 {
-	printf("%s\n", s);
-}
+	#ifdef REX_SDL
+		printf("%s\n", s);
+	#endif
 
-#endif
-
-#ifdef REX_DOS
-
-void say(char* s)
-{
-	_outtext(s);
-	_outtext("\n");
+	#ifdef REX_DOS
+		_outtext(s);
+		_outtext("\n");
+	#endif
 }
 
 void fail(char *s, ...)
@@ -45,9 +40,7 @@ void fail(char *s, ...)
 	vsprintf(failure_message + (sizeof(failure_header) - 1), s, args);
 	va_end(args);
 
-	_setvideomode(_DEFAULTMODE);
+	RexGraphicsRemove();
 	printf(failure_message);
 	exit(EXIT_FAILURE);
 }
-
-#endif

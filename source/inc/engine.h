@@ -142,7 +142,7 @@ typedef struct
 	LONG bpp;					// bits per pixel
 	LONG bytes_per_row;			// bytes per row. rows are 4 byte aligned
 	LONG shared;				// false if buffer is owned. TODO: reference counting
-	VOID* buffer;				// allocated pixel buffer
+	VOID *buffer;				// allocated pixel buffer
 	SCANLINES scanlines;		// pre-calculated scanline pointers
 } PICTURE;
 

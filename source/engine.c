@@ -164,16 +164,16 @@ void RexEngineExecute(void)
 	RexTimerInstall(120);
 
 	thing->sid = 0;
-	thing->x   = -900;
-	thing->y   = 2000;
-	thing->z   = 200;
+	thing->x = -900;
+	thing->y = 2000;
+	thing->z = 200;
 	thing->front.texture = 124;
 	//thing->front.flags |= SURFACE_OPAQUE;
 	thing->back.texture = 10;
 	//thing->back.flags |= SURFACE_OPAQUE;
 
 	camera->sid = 0;
-	camera->z   = WORLD_UNIT * 4;
+	camera->z = WORLD_UNIT * 4;
 
 	for (tick = timer;;)
 	{
@@ -269,7 +269,7 @@ void RexEngineExecute(void)
 			if (camera->rot.x > 320) camera->rot.x = 320;
 			else if (camera->rot.x < -320) camera->rot.x = -320;
 
-			//if (KEY_DOWN(30) && camera->rot.x <  320) camera->rot.x += 7;
+			//if (KEY_DOWN(30) && camera->rot.x < 320) camera->rot.x += 7;
 			//if (KEY_DOWN(44) && camera->rot.x > -320) camera->rot.x -= 7;
 			//if (KEY_DOWN(KB_RTARROW)) camera->rot.y += 7;
 			//if (KEY_DOWN(KB_LTARROW)) camera->rot.y -= 7;
@@ -283,62 +283,62 @@ void RexEngineExecute(void)
 				{
 					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-					if ((code >> 12) == 3) sectors[id].mid  .flags ^= SURFACE_OPAQUE;
+					if ((code >> 12) == 3) sectors[id].mid.flags ^= SURFACE_OPAQUE;
 					if ((code >> 12) == 8) objects[id].front.flags ^= SURFACE_OPAQUE;
-					if ((code >> 12) == 9) objects[id].back .flags ^= SURFACE_OPAQUE;
+					if ((code >> 12) == 9) objects[id].back.flags ^= SURFACE_OPAQUE;
 				}
 				if (KEY_PRESSED(20)) // Texture
 				{
 					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-					if ((code >> 12) == 0) SURFACE_EDIT(texture, walls  [id].surface, 1);
-					if ((code >> 12) == 1) SURFACE_EDIT(texture, sectors[id].bot    , 1);
-					if ((code >> 12) == 2) SURFACE_EDIT(texture, sectors[id].top    , 1);
-					if ((code >> 12) == 3) SURFACE_EDIT(texture, sectors[id].mid    , 1);
+					if ((code >> 12) == 0) SURFACE_EDIT(texture, walls[id].surface, 1);
+					if ((code >> 12) == 1) SURFACE_EDIT(texture, sectors[id].bot, 1);
+					if ((code >> 12) == 2) SURFACE_EDIT(texture, sectors[id].top, 1);
+					if ((code >> 12) == 3) SURFACE_EDIT(texture, sectors[id].mid, 1);
 
-					if ((code >> 12) == 8) SURFACE_EDIT(texture, objects[id].front  , 1);
-					if ((code >> 12) == 9) SURFACE_EDIT(texture, objects[id].back   , 1);
+					if ((code >> 12) == 8) SURFACE_EDIT(texture, objects[id].front, 1);
+					if ((code >> 12) == 9) SURFACE_EDIT(texture, objects[id].back, 1);
 				}
 				if (KEY_PRESSED(45)) // X Repeat
 				{
 					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-					if ((code >> 12) == 0) SURFACE_EDIT(repeatx, walls  [id].surface, 1);
-					if ((code >> 12) == 1) SURFACE_EDIT(repeatx, sectors[id].bot    , 1);
-					if ((code >> 12) == 2) SURFACE_EDIT(repeatx, sectors[id].top    , 1);
+					if ((code >> 12) == 0) SURFACE_EDIT(repeatx, walls[id].surface, 1);
+					if ((code >> 12) == 1) SURFACE_EDIT(repeatx, sectors[id].bot, 1);
+					if ((code >> 12) == 2) SURFACE_EDIT(repeatx, sectors[id].top, 1);
 				}
 				if (KEY_PRESSED(21)) // Y Repeat
 				{
 					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-					if ((code >> 12) == 0) SURFACE_EDIT(repeaty, walls  [id].surface, 1);
-					if ((code >> 12) == 1) SURFACE_EDIT(repeaty, sectors[id].bot    , 1);
-					if ((code >> 12) == 2) SURFACE_EDIT(repeaty, sectors[id].top    , 1);
+					if ((code >> 12) == 0) SURFACE_EDIT(repeaty, walls[id].surface, 1);
+					if ((code >> 12) == 1) SURFACE_EDIT(repeaty, sectors[id].bot, 1);
+					if ((code >> 12) == 2) SURFACE_EDIT(repeaty, sectors[id].top, 1);
 				}
 
 				if (KEY_PRESSED(35)) // X Panning
 				{
 					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-					if ((code >> 12) == 0) SURFACE_EDIT(panningx, walls  [id].surface, i2f(16));
-					if ((code >> 12) == 1) SURFACE_EDIT(panningx, sectors[id].bot    , i2f(16));
-					if ((code >> 12) == 2) SURFACE_EDIT(panningx, sectors[id].top    , i2f(16));
+					if ((code >> 12) == 0) SURFACE_EDIT(panningx, walls[id].surface, i2f(16));
+					if ((code >> 12) == 1) SURFACE_EDIT(panningx, sectors[id].bot, i2f(16));
+					if ((code >> 12) == 2) SURFACE_EDIT(panningx, sectors[id].top, i2f(16));
 				}
 				if (KEY_PRESSED(47)) // Y Panning
 				{
 					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-					if ((code >> 12) == 0) SURFACE_EDIT(panningy, walls  [id].surface, i2f(16));
-					if ((code >> 12) == 1) SURFACE_EDIT(panningy, sectors[id].bot    , i2f(16));
-					if ((code >> 12) == 2) SURFACE_EDIT(panningy, sectors[id].top    , i2f(16));
+					if ((code >> 12) == 0) SURFACE_EDIT(panningy, walls[id].surface, i2f(16));
+					if ((code >> 12) == 1) SURFACE_EDIT(panningy, sectors[id].bot, i2f(16));
+					if ((code >> 12) == 2) SURFACE_EDIT(panningy, sectors[id].top, i2f(16));
 				}
 				if (KEY_PRESSED(38)) // Light (Brightness)
 				{
 					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-					if ((code >> 12) == 0) SURFACE_EDIT(light, walls  [id].surface, 1);
-					if ((code >> 12) == 1) SURFACE_EDIT(light, sectors[id].bot    , 1);
-					if ((code >> 12) == 2) SURFACE_EDIT(light, sectors[id].top    , 1);
+					if ((code >> 12) == 0) SURFACE_EDIT(light, walls[id].surface, 1);
+					if ((code >> 12) == 1) SURFACE_EDIT(light, sectors[id].bot, 1);
+					if ((code >> 12) == 2) SURFACE_EDIT(light, sectors[id].top, 1);
 				}
 
 				if (KEY_PRESSED(KB_INSERT))
@@ -385,9 +385,9 @@ void RexEngineExecute(void)
 				{
 					WORD code = pic_stencil.scanlines.w[y][x], id = code & 0xFFF;
 
-					if ((code >> 12) == 1) SURFACE_EDIT(slopez, sectors[id].bot,  WORLD_UNIT);
-					if ((code >> 12) == 2) SURFACE_EDIT(slopez, sectors[id].top,  WORLD_UNIT);
-					if ((code >> 12) == 3) SURFACE_EDIT(slopez, sectors[id].mid,  WORLD_UNIT);
+					if ((code >> 12) == 1) SURFACE_EDIT(slopez, sectors[id].bot, WORLD_UNIT);
+					if ((code >> 12) == 2) SURFACE_EDIT(slopez, sectors[id].top, WORLD_UNIT);
+					if ((code >> 12) == 3) SURFACE_EDIT(slopez, sectors[id].mid, WORLD_UNIT);
 				}
 				if (KEY_PRESSED(50))
 				{
@@ -417,10 +417,10 @@ void RexEngineCreate(void)
 
 	say("Allocating offscreen buffers.");
 
-	RexPictureLoad(&pic_font , "images/font8x8.pcx", palette);
-	RexPictureLoad(&pic_sky  , "images/sky.pcx"    , palette);
-	//RexPictureLoad(&pic_arrow, "images/arrow.pcx"  , palette);
-	//RexPictureLoad(&pic_lens , "images/lens.pcx"   , palette);
+	RexPictureLoad(&pic_font, "images/font8x8.pcx", palette);
+	RexPictureLoad(&pic_sky, "images/sky.pcx", palette);
+	//RexPictureLoad(&pic_arrow, "images/arrow.pcx", palette);
+	//RexPictureLoad(&pic_lens, "images/lens.pcx", palette);
 
 	say("Installing palette.");
 	RexPaletteLoad("gfx/palette.dat");
