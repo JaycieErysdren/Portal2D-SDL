@@ -8,7 +8,7 @@ WATCOM_DIR=/usr/bin/watcom
 
 # C compiler
 CC=wcc386
-CCFLAGS=-w4 -za99 -e25 -zq -otexan -d1 -fp3 -4r -mf -bt=dos&
+CCFLAGS=-w4 -za99 -e25 -zq -otexan -d1 -fp3 -4r -mf -bt=dos
 
 # Compiled objects to include
 OBJS=&

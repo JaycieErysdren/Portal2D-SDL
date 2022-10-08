@@ -15,9 +15,16 @@
 // ========================================================
 
 #include "rex.h"
-#include "gbm.h"
 
+#define USE_GBM 1
+
+#ifdef USE_GBM
+#include "gbm.h"
+#endif
+
+#ifdef USE_DRPCX
 #include "dr_pcx.h"
+#endif
 
 // creates a picture. allocates required pixel buffer and pre-calculates scanline pointers.
 void RexPictureCreate(PICTURE* picture, int width, int height, int bpp, int bytes_per_row, void* buffer)
@@ -92,17 +99,19 @@ void RexPictureCopy(PICTURE* dst, PICTURE* src)
 	memcpy(dst->buffer, src->buffer, dst->bytes_per_row * dst->height);
 }
 
+#ifdef USE_DRPCX
+
 void RexPictureLoad(PICTURE* picture, PATH filename, PALETTE palette)
 {
 	int width;
 	int height;
 	int components;
-	void *buffer = drpcx_load_file(filename, 0, &width, &height, &components, 3);
+	void *buffer = drpcx_load_file(filename, 0, &width, &height, &components, 1);
 
 	if (buffer == NULL)
 		return;
 
-	RexPictureCreate(picture, width, height, 8, 0, buffer);
+	RexPictureCreate(picture, width, height, 0, 0, buffer);
 
 	drpcx_free(buffer);
 }
@@ -112,7 +121,9 @@ void RexPictureSave(PICTURE* picture, PATH filename, PALETTE palette)
 	fail("RexPictureSave is not implemented at this time.");
 }
 
-#ifdef GBM_USE
+#endif
+
+#ifdef USE_GBM
 
 void RexPictureLoad(PICTURE* picture, PATH filename, PALETTE palette)
 {
