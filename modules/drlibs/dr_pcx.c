@@ -39,7 +39,6 @@
 // QUICK NOTES
 // - 2-bpp/4-plane and 4-bpp/1-plane formats have not been tested.
 
-#ifdef DR_PCX_IMPLEMENTATION
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -656,8 +655,6 @@ void drpcx_free(void* pReturnValueFromLoad)
 {
     free(pReturnValueFromLoad);
 }
-
-#endif // DR_PCX_IMPLEMENTATION
 
 
 // REVISION HISTORY
