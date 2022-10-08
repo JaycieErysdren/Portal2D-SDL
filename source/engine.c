@@ -417,20 +417,21 @@ void RexEngineCreate(void)
 
 	say("Allocating offscreen buffers.");
 
-	RexPictureLoad(&pic_font, "images/font8x8.pcx", palette);
-	RexPictureLoad(&pic_sky, "images/sky.pcx", palette);
+	RexPictureLoad(&pic_font, "images/font8x8.bmp", palette);
+	RexPictureLoad(&pic_sky, "images/sky.bmp", palette);
 	//RexPictureLoad(&pic_arrow, "images/arrow.pcx", palette);
 	//RexPictureLoad(&pic_lens, "images/lens.pcx", palette);
 
 	say("Installing palette.");
 	RexPaletteLoad("gfx/palette.dat");
 
+	RexTablesCreate();
+
 	say("Loading textures.");
 
 	for (i = 0; i < MAX_TEXTURE; i++)
 	{
-		sprintf(sbuf, "textures/%d.pcx", i);
+		sprintf(sbuf, "textures/%d.bmp", i);
 		RexPictureLoad(&textures[i], sbuf, palette);
-		if (i == 0) RexTablesCreate();
 	}
 }

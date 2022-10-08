@@ -21,18 +21,14 @@ TARGET=$(TARGET_PATH)/$(TARGET_EXEC)
 
 # Include directories
 WATCOM_DIR=/usr/bin/watcom
-GBM_DIR=../modules/gbm
 DIV0_DIR=../modules/div0
-DRLIBS_DIR=../modules/drlibs
 
 # C compiler
 CC=wcc386
 CCFLAGS=-w4 -e25 -zq -otexan -d1 -fp3 -4r -mf -bt=dos&
 	-Iinc&
 	-I$(WATCOM_DIR)/h&
-	-I$(GBM_DIR)&
 	-I$(DIV0_DIR)&
-	-I$(DRLIBS_DIR)&
 	-DREX_DOS
 
 # ASM compiler
@@ -60,8 +56,6 @@ OBJS=&
 	main.o&
 
 LIBS=&
-	$(DRLIBS_DIR)/dr_pcx.lib&
-	$(GBM_DIR)/gbm.lib&
 	$(DIV0_DIR)/div0.lib&
 
 # C rules

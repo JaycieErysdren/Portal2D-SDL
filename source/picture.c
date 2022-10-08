@@ -16,16 +16,6 @@
 
 #include "rex.h"
 
-#define USE_GBM 1
-
-#ifdef USE_GBM
-#include "gbm.h"
-#endif
-
-#ifdef USE_DRPCX
-#include "dr_pcx.h"
-#endif
-
 // creates a picture. allocates required pixel buffer and pre-calculates scanline pointers.
 void RexPictureCreate(PICTURE* picture, int width, int height, int bpp, int bytes_per_row, void* buffer)
 {
@@ -35,15 +25,15 @@ void RexPictureCreate(PICTURE* picture, int width, int height, int bpp, int byte
 
 	if (bytes_per_row <= 0) bytes_per_row = (bpp * width + 31) >> 5 << 2;
 
-	picture->width           = width;
-	picture->height          = height;
-	picture->bpp             = bpp;
-	picture->bytes_per_row   = bytes_per_row;
-	picture->buffer          = buffer ? buffer : calloc(height, bytes_per_row);
-	picture->shared          = buffer != 0;
-	picture->scanlines.b     = malloc(height * sizeof(void*));
+	picture->width				= width;
+	picture->height				= height;
+	picture->bpp				= bpp;
+	picture->bytes_per_row		= bytes_per_row;
+	picture->buffer				= buffer ? buffer : calloc(height, bytes_per_row);
+	picture->shared				= buffer != 0;
+	picture->scanlines.b		= malloc(height * sizeof(void *));
 
-	while (height--) picture->scanlines.b[height] = (BYTE*)((DWORD)picture->buffer + bytes_per_row * height);
+	while (height--) picture->scanlines.b[height] = (BYTE *)((DWORD)picture->buffer + bytes_per_row * height);
 }
 
 void RexPictureCreateMip(PICTURE* dst, PICTURE* src, CLUT blender)
@@ -99,119 +89,44 @@ void RexPictureCopy(PICTURE* dst, PICTURE* src)
 	memcpy(dst->buffer, src->buffer, dst->bytes_per_row * dst->height);
 }
 
-#ifdef USE_DRPCX
-
-void RexPictureLoad(PICTURE* picture, PATH filename, PALETTE palette)
+void RexPictureLoad(PICTURE *picture, PATH filename, PALETTE palette)
 {
-	int width;
-	int height;
-	int components;
-	void *buffer = drpcx_load_file(filename, 0, &width, &height, &components, 1);
+	FILE *fp;
+	WORD width, height;
+	WORD num_palette_colors;
 
-	if (buffer == NULL)
+	fp = fopen(filename, "rb");
+
+	if (fp == NULL)
 		return;
 
-	RexPictureCreate(picture, width, height, 0, 0, buffer);
+	if (fgetc(fp) != 'B' || fgetc(fp) != 'M')
+	{
+		fclose(fp);
+		fail("%s is not a bitmap file", filename);
+	}
 
-	drpcx_free(buffer);
+	fskip(fp, 16);
+	fread(&width, sizeof(WORD), 1, fp);
+	fskip(fp, 2);
+	fread(&height, sizeof(WORD), 1, fp);
+	fskip(fp, 22);
+	fread(&num_palette_colors, sizeof(WORD), 1, fp);
+
+	RexPictureCreate(picture, width, height, 0, 0, 0);
+
+	fskip(fp, 6);
+	fskip(fp, num_palette_colors * 4);
+
+	fread(picture->buffer, height, picture->bytes_per_row, fp);
+
+	fclose(fp);
 }
 
-void RexPictureSave(PICTURE* picture, PATH filename, PALETTE palette)
+void RexPictureSave(PICTURE *picture, PATH filename, PALETTE palette)
 {
 	fail("RexPictureSave is not implemented at this time.");
 }
-
-#endif
-
-#ifdef USE_GBM
-
-void RexPictureLoad(PICTURE* picture, PATH filename, PALETTE palette)
-{
-	int filetype;
-
-	if (gbm_guess_filetype(filename, &filetype) == GBM_ERR_OK)
-	{
-		int file = gbm_io_open(filename, O_RDONLY | O_BINARY);
-
-		if (file != -1)
-		{
-			GBM gbm;
-
-			if (gbm_read_header(filename, file, filetype, &gbm, "") == GBM_ERR_OK)
-			{
-				RexPictureCreate(picture, gbm.w, gbm.h, gbm.bpp, 0, 0);
-
-				if (gbm_read_data(file, filetype, &gbm, (BYTE *)picture->buffer) == GBM_ERR_OK)
-				{
-					GBMRGB gbmrgb[256];
-
-					if (gbm_read_palette(file, filetype, &gbm, gbmrgb) == GBM_ERR_OK)
-					{
-						int i;
-						for (i = 0; i < 256; i++)
-						{
-							// nah
-							//palette[i][0] = gbmrgb[i].r;
-							//palette[i][1] = gbmrgb[i].g;
-							//palette[i][2] = gbmrgb[i].b;
-						}
-					}
-				}
-			}
-			gbm_io_close(file);
-		}
-	}
-}
-
-void RexPictureSave(PICTURE* picture, PATH filename, PALETTE palette)
-{
-	int filetype;
-
-	if (gbm_guess_filetype(filename, &filetype) == GBM_ERR_OK)
-	{
-		GBMFT gbmft;
-		int flag = 0;
-
-		gbm_query_filetype(filetype, &gbmft);
-
-		switch (picture->bpp)
-		{
-			//case 32:  flag = GBM_FT_W32; break; // No 32 bit image support in GBM?
-			case 24:  flag = GBM_FT_W24; break;
-			case  8:  flag = GBM_FT_W8 ; break;
-			case  4:  flag = GBM_FT_W4 ; break;
-			case  1:  flag = GBM_FT_W1 ; break;
-		}
-		if (gbmft.flags & flag)
-		{
-			int file = gbm_io_create(filename, O_WRONLY | O_BINARY);
-
-			if (file != -1)
-			{
-				GBM    gbm;
-				GBMRGB gbmrgb[256];
-				int i;
-
-				for (i = 0; i < 256; i++)
-				{
-					gbmrgb[i].r = palette[i][0];
-					gbmrgb[i].g = palette[i][1];
-					gbmrgb[i].b = palette[i][2];
-				}
-				gbm.w   = picture->width;
-				gbm.h   = picture->height;
-				gbm.bpp = picture->bpp;
-
-				if (gbm_write(filename, file, filetype, &gbm, gbmrgb, (BYTE*) picture->buffer, "") == GBM_ERR_OK)
-				{
-				}
-				gbm_io_close(file);
-			}
-		}
-	}
-}
-
-#endif
 
 void RexPictureAssertSame(PICTURE* dst, PICTURE* src)
 {
