@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 project(Portal2D)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 find_package(SDL2 REQUIRED)
 
 link_libraries(${SDL2_LIBRARIES})

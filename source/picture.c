@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Picture handling functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 9th, 2022
 //
 // ========================================================
 
@@ -187,8 +187,8 @@ void RexPictureBlit8(PICTURE* dst, int x1, int y1, int x2, int y2, PICTURE* src,
 	#define INNER_LOOP \
 	for (;y1 < y2; y1++, v1 += vv) \
 	{ \
-		BYTE* I = src->scanlines.b[f2i(v1)]; \
-		BYTE* O = &dst->scanlines.b[y1][x1]; \
+		BYTE *I = src->scanlines.b[f2i(v1)]; \
+		BYTE *O = &dst->scanlines.b[y1][x1]; \
 		for(w = x2 - x1, u = u1; w--; u += uu, O++) {AFFINE} \
 	}
 

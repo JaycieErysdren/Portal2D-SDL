@@ -10,14 +10,14 @@
 //
 // DESCRIPTION:		Rendering functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 9th, 2022
 //
 // ========================================================
 
 #include "rex.h"
 
 // render polygon to the back buffer. standard perspective correct dda style rendering. also handles sky rendering & mip mapping.
-void RexRenderPolygon(POLYGON src, int n, const SURFACE* surface, const WORD id, const int width, const int height)
+void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id, const int width, const int height)
 {
 	int i;
 	POLYGON tmp1, tmp2;
@@ -35,8 +35,8 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE* surface, const WORD id,
 		int rt_i, rt_x, rt_xx, rt_z, rt_zz, rt_u, rt_uu, rt_v, rt_vv, rt_w, rt_ww;
 		int x, xx;
 
-		TEXTURE66* tb = textures[surface->texture].buffer;
-		LIGHTMAP* lb = lightmaps[(surface->light + 16) & 31];
+		TEXTURE66 *tb = textures[surface->texture].buffer;
+		LIGHTMAP *lb = lightmaps[(surface->light + 16) & 31];
 
 		int lt_length = 0;
 		int rt_length = 0;
@@ -132,9 +132,9 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE* surface, const WORD id,
 
 			if (xx > 0)
 			{
-				BYTE* fb = &pic_bbuffer.scanlines.b[y1][x];
-				WORD* sb = &pic_stencil.scanlines.w[y1][x];
-				WORD* zb = &pic_zbuffer.scanlines.w[y1][x];
+				BYTE *fb = &pic_bbuffer.scanlines.b[y1][x];
+				WORD *sb = &pic_stencil.scanlines.w[y1][x];
+				WORD *zb = &pic_zbuffer.scanlines.w[y1][x];
 
 				#ifdef RENDER_RECIPROCAL
 					int zz = fixmul(rt_z - lt_z, j = fixinv(rt_x - lt_x));
@@ -199,7 +199,7 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE* surface, const WORD id,
 					int sky_lft = imin(512 - sky_pos, xx);
 					int sky_rht = xx - sky_lft;
 
-					BYTE* sky = &pic_sky.scanlines.b[y1][sky_pos];
+					BYTE *sky = &pic_sky.scanlines.b[y1][sky_pos];
 
 					while (sky_lft--) {AFFINE}
 
@@ -216,7 +216,7 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE* surface, const WORD id,
 	}
 }
 
-void RexRenderPolygonGL(POLYGON polygon, int n, SURFACE* surface, int id, MATRIX matrix)
+void RexRenderPolygonGL(POLYGON polygon, int n, SURFACE *surface, int id, MATRIX matrix)
 {
 	RexRenderPolygon(polygon, n, surface, id, pic_bbuffer.width, pic_bbuffer.height);
 }
@@ -356,7 +356,7 @@ void RexRenderConsole(void)
 	}
 }
 
-void RexRenderView(OBJECT* camera)
+void RexRenderView(OBJECT *camera)
 {
 	int x, y;
 
@@ -379,12 +379,13 @@ void RexRenderView(OBJECT* camera)
 		RexRenderObject(2, matrix);
 	}
 
-	RexRenderConsole();
+	//RexRenderConsole();
 
 	RexMouseRead(&x, &y);
 
 	//picture_draw8(&pic_bbuffer, &pic_arrow, x, y, PICTURE_MODE_COLORKEY);
 
 	// Copy view buffer to video memory.
-	RexPictureCopy(&pic_fbuffer, &pic_bbuffer);
+	RexDoubleBuffer();
+	//RexPictureCopy(&pic_fbuffer, &pic_bbuffer);
 }

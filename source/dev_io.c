@@ -85,6 +85,15 @@
 	// Graphics routines
 	//
 
+	void RexDoubleBuffer(void)
+	{
+		SDL_UpdateTexture(sdl_screen, NULL, pic_bbuffer.buffer, pic_bbuffer.bytes_per_row);
+
+		SDL_RenderClear(sdl_renderer);
+		SDL_RenderCopy(sdl_renderer, sdl_screen, NULL, NULL);
+		SDL_RenderPresent(sdl_renderer);
+	}
+
 	void RexGraphicsInstall(const char *title, int width, int height)
 	{
 		if (SDL_Init(SDL_INIT_EVERYTHING) != 0) fail("SDL failed to initialize! (%s)", SDL_GetError());
@@ -271,6 +280,11 @@
 	// Graphics routines
 	//
 
+	void RexDoubleBuffer(void)
+	{
+		RexPictureCopy(&pic_fbuffer, &pic_bbuffer);
+	}
+	
 	void RexGraphicsInstall(const char *title, int width, int height)
 	{
 		_setvideomode(_MRES256COLOR);

@@ -68,6 +68,7 @@
 	void RexTimerRemove(void);
 
 	// Graphics functions
+	void RexDoubleBuffer(void);
 	void RexGraphicsInstall(const char *title, int width, int height);
 	void RexGraphicsRemove(void);
 
@@ -133,6 +134,7 @@
 	void RexTimerRemove(void);
 
 	// Graphics functions
+	void RexDoubleBuffer(void);
 	void RexGraphicsInstall(const char *title, int width, int height);
 	void RexGraphicsRemove(void);
 

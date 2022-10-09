@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		The program's main entry point.
 //
-// LAST EDITED:		October 8th, 2022
+// LAST EDITED:		October 9th, 2022
 //
 // ========================================================
 
@@ -44,7 +44,14 @@ void main(int argc, char *argv[])
 	}
 	else
 	{
-		say("No input map specified.");
+		RexLevelLoad("test.map");
+
+		for (;;)
+		{
+			RexEngineExecute();
+
+			if (view.key == 'q') break;
+		}
 	}
 
 	RexEngineDestroy();

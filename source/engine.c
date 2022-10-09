@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Main engine functions.
 //
-// LAST EDITED:		October 8th, 2022
+// LAST EDITED:		October 9th, 2022
 //
 // ========================================================
 
@@ -104,7 +104,10 @@ void RexEngineDestroy(void)
 	RexTimerRemove();
 	RexKeyboardRemove();
 
+	#ifdef REX_DOS
 	RexPictureDestroy(&pic_fbuffer);
+	#endif
+
 	RexPictureDestroy(&pic_bbuffer);
 	RexPictureDestroy(&pic_zbuffer);
 	RexPictureDestroy(&pic_stencil);
@@ -139,32 +142,16 @@ void RexEngineExecute(void)
 
 	RexGraphicsInstall("Portal2D", 320, 200);
 
+	#ifdef REX_DOS
 	RexPictureCreate(&pic_fbuffer, view.width, view.height, 8, 0, (void *)0xA0000);
+	#endif
 
 	RexPictureCreate(&pic_bbuffer, view.width, view.height, 8, 0, 0);
 
-	RexPictureCreate(&pic_zbuffer, pic_fbuffer.width, pic_fbuffer.height, 16, 0, 0);
-	RexPictureCreate(&pic_stencil, pic_fbuffer.width, pic_fbuffer.height, 16, 0, 0);
+	RexPictureCreate(&pic_zbuffer, view.width, view.height, 16, 0, 0);
+	RexPictureCreate(&pic_stencil, view.width, view.height, 16, 0, 0);
 
 	RexPictureCreate(&pic_console, 40, 10, 8, 0, 0);
-
-	/* dumb
-	for(i = 0; i < 256; i++)
-	{
-		// ??
-		#ifdef EDITABLE_SURFACES
-			x = RGB_BRIGHTNESS(palette[i][0], palette[i][1], palette[i][2]);
-		#endif
-
-		view.palette[i][0] = imin(pow(palette[i][0] / 255.0, 64.0 / 64) * 255.0, 255);
-		view.palette[i][1] = imin(pow(palette[i][1] / 255.0, 64.0 / 64) * 255.0, 255);
-		view.palette[i][2] = imin(pow(palette[i][2] / 255.0, 64.0 / 64) * 255.0, 255);
-
-		view.palette[i][0] = imin(imuldiv(palette[i][0], 128, 255), 255);
-		view.palette[i][1] = imin(imuldiv(palette[i][1], 128, 255), 255);
-		view.palette[i][2] = imin(imuldiv(palette[i][2], 255, 255), 255);
-	}
-	*/
 
 	RexPaletteInstall(palette);
 
