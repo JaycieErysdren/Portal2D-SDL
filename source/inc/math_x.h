@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Fixed-point math header.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 8th, 2022
 //
 // ========================================================
 
@@ -30,13 +30,13 @@
 
 extern int sintable[2048];
 
-#define fixsin(A) sintable[(A)&2047]
-#define fixcos(A) sintable[((A)+512)&2047]
+#define fixsin(A) sintable[(A) & 2047]
+#define fixcos(A) sintable[((A) + 512) & 2047]
 
-int fixinv(int);
-int fixmul(int, int);
-int fixdiv(int, int);
-int fixdot3(int, int, int, int, int, int);
+int fixinv(int a);
+int fixmul(int a, int b);
+int fixdiv(int a, int b);
+int fixdot3(int a, int b, int c, int d, int e, int f);
 
 #ifdef __WATCOMC__
 

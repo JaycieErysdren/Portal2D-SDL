@@ -19,11 +19,5 @@
 		{
 			"path": "."
 		}
-	],
-	"settings": {
-		"files.associations": {
-			"ios": "c",
-			"vector": "c"
-		}
-	}
+	]
 }

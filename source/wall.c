@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Wall handling functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 8th, 2022
 //
 // ========================================================
 
@@ -79,7 +79,13 @@ int RexLightCalc(int x, int y, int z)
 	y = (y & t) - (t >> 1);
 	z = (z & t) - (t >> 1);
 
+	#ifdef REX_DOS
 	return imax(imin(tmulscale10(x, x, y, y, z, z), i2f(30)), 0);
+	#endif
+
+	#ifdef REX_SDL
+	return imax(imin(tmulscale(x, x, y, y, z, z, 10), i2f(30)), 0);
+	#endif
 }
 
 // transform a wall into camera space.
@@ -163,7 +169,14 @@ int RexWallIsVisible(int wid, int x, int y)
 {
 	int nx = walls[walls[wid].next].y - walls[wid].y;
 	int ny = walls[wid].x - walls[walls[wid].next].x;
+
+	#ifdef REX_DOS
 	return dmulscale25(nx, x - walls[wid].x, ny, y - walls[wid].y) >= 0;
+	#endif
+
+	#ifdef REX_SDL
+	return dmulscale(nx, x - walls[wid].x, ny, y - walls[wid].y, 25) >= 0;
+	#endif
 }
 
 // extract a wall segment.

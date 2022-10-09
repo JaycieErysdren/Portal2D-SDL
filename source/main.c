@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		The program's main entry point.
 //
-// LAST EDITED:		October 6th, 2022
+// LAST EDITED:		October 8th, 2022
 //
 // ========================================================
 
@@ -21,8 +21,8 @@ void main(int argc, char *argv[])
 	char *start_map;
 	if (argc > 1) start_map = argv[1];
 
-	view.width = 640;
-	view.height = 480;
+	view.width = 320;
+	view.height = 200;
 	view.zoom = 1;
 	view.zoom_div = WORLD_UNIT;
 	view.grid = WORLD_UNIT * 8;
@@ -37,9 +37,7 @@ void main(int argc, char *argv[])
 
 		for (;;)
 		{
-			div0_init(DM_SATURATE);
 			RexEngineExecute();
-			div0_close();
 
 			if (view.key == 'q') break;
 		}

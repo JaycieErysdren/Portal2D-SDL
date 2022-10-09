@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		VSCode C / C++ settings.
 //
-// LAST EDITED:		October 4th, 2022
+// LAST EDITED:		October 8th, 2022
 //
 // ========================================================
 
@@ -26,7 +26,8 @@
 				"${workspaceFolder}/../modules/drlibs/**",
 				"/usr/bin/watcom/h/**"
 			],
-			"defines": ["REX_DOS", "__WATCOMC__"]
+			//"defines": ["REX_DOS", "__WATCOMC__"]
+			"defines": ["REX_SDL"]
 		}
 	],
 	"version": 4

@@ -10,13 +10,13 @@
 //
 // DESCRIPTION:		Integer math.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 8th, 2022
 //
 // ========================================================
 
 int isqrt(int value);
 
-int imin(int, int);
+int imin(int a, int b);
 #pragma aux imin = \
 	"cmp eax, ebx", \
 	"jl skipit", \
@@ -25,7 +25,7 @@ int imin(int, int);
 	parm nomemory [eax][ebx] \
 	modify exact [eax];
 
-int imax(int, int);
+int imax(int a, int b);
 #pragma aux imax = \
 	"cmp eax, ebx", \
 	"jg skipit", \
@@ -34,14 +34,14 @@ int imax(int, int);
 	parm nomemory [eax][ebx] \
 	modify exact [eax];
 
-int isqr(int);
+int isqr(int value);
 #pragma aux isqr = \
 	"imul eax, eax", \
 	parm nomemory [eax] \
 	modify exact [eax] \
 	value [eax];
 
-int imuldiv(int, int, int);
+int imuldiv(int a, int b, int c);
 #pragma aux imuldiv parm [eax] [edx] [ebx] modify exact [eax edx] = \
 	"imul edx" \
 	"idiv ebx";

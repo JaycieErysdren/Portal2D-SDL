@@ -10,12 +10,12 @@
 #
 # DESCRIPTION:		Portal2D makefile for OWv2
 #
-# LAST EDITED:		October 6th, 2022
+# LAST EDITED:		October 8th, 2022
 #
 # ========================================================
 
 # Target executable
-TARGET_EXEC=game2.exe
+TARGET_EXEC=portal2d.exe
 TARGET_PATH=../game
 TARGET=$(TARGET_PATH)/$(TARGET_EXEC)
 
@@ -42,6 +42,7 @@ OBJS=&
 	math_x.o&
 	math_i.o&
 	matrix.o&
+	pragmas.o&
 	polygon.o&
 	wall.o&
 	sector.o&

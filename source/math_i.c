@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Fixed-point math.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 8th, 2022
 //
 // ========================================================
 
@@ -43,3 +43,32 @@ int isqrt(int value)
 
 	return root;
 }
+
+#ifdef REX_SDL
+
+int imin(int a, int b)
+{
+	return a < b ? b : a;
+}
+
+int imax(int a, int b)
+{
+	return a > b ? b : a;
+}
+
+int isqr(int value)
+{
+	return value * value;
+}
+
+int imuldiv(int a, int b, int c)
+{
+	return (a * b) / c;
+}
+
+void memcpy32(long *Source, long *Destination, int Length)
+{
+	memcpy(Destination, Source, Length);
+}
+
+#endif

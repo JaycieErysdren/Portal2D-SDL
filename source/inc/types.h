@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Simple and complex datatypes.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 8th, 2022
 //
 // ========================================================
 
@@ -23,7 +23,8 @@ typedef unsigned long DWORD;
 
 #ifdef REX_SDL
 
-typedef long INT64;
+typedef int64_t INT64;
+typedef int32_t INT32;
 
 #endif
 

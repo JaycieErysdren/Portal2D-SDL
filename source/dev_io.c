@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Device IO abstractions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 8th, 2022
 //
 // ========================================================
 
@@ -18,16 +18,103 @@
 
 #ifdef REX_SDL
 
+	void RexMouseInstall(void)
+	{
+		return;
+	}
 
+	void RexMouseShow(int on)
+	{
+		return;
+	}
+
+	int RexMouseRead(int* x, int* y)
+	{
+		return 0;
+	}
+
+	void RexMouseSet(int* x, int* y)
+	{
+		return;
+	}
+
+	int RexMouseButtonPress(int* x, int* y)
+	{
+		return 0;
+	}
+
+	//
+	// Timer routines
+	//
+
+	unsigned timer;
+
+	void RexTimerInstall(int target_speed)
+	{
+		return;
+	}
+
+	void RexTimerRemove(void)
+	{
+		return;
+	}
+
+	//
+	// Keyboard routines
+	//
+
+	char keydown[128];
+	char keyprev[128];
+	char last_key;
+
+	void RexKeyboardRemove(void)
+	{
+		return;
+	}
+
+	void RexKeyboardInstall(void)
+	{
+		return;
+	}
+
+	//
+	// Graphics routines
+	//
+
+	void RexGraphicsInstall(char *title, int width, int height)
+	{
+		return;
+	}
+
+	void RexGraphicsRemove(void)
+	{
+		return;
+	}
+
+	void RexPaletteLoad(char *filename)
+	{
+		return;
+	}
+
+	void RexPaletteInstall(PALETTE palette)
+	{
+		return;
+	}
 
 #endif
 
 #ifdef REX_DOS
 
+	//
 	// Global registers
+	//
+
 	static union REGS regs;
 
+	//
 	// Mouse routines
+	//
+
 	void RexMouseInstall(void)
 	{
 		regs.x.eax = 0;
@@ -71,7 +158,10 @@
 		return regs.x.ebx;
 	}
 
-	// Timer routines (120 ticks / second)
+	//
+	// Timer routines
+	//
+
 	unsigned timer;
 
 	static void (__interrupt __far* __timer_interupt)();
@@ -124,7 +214,6 @@
 
 	char keydown[128];
 	char keyprev[128];
-
 	char last_key;
 
 	static void (__interrupt __far* __keyboard_interrupt)();
@@ -165,9 +254,9 @@
 	// Graphics routines
 	//
 
-	void RexGraphicsInstall(int mode)
+	void RexGraphicsInstall(char *title, int width, int height)
 	{
-		_setvideomode(mode);
+		_setvideomode(_MRES256COLOR);
 		//regs.x.eax = mode;
 		//int386(0x10, &regs, &regs);
 	}

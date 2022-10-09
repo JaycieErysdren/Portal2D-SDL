@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Main engine functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 8th, 2022
 //
 // ========================================================
 
@@ -97,6 +97,10 @@ void RexTablesCreate(void)
 
 void RexEngineDestroy(void)
 {
+	#ifdef REX_DOS
+	div0_close();
+	#endif
+
 	RexTimerRemove();
 	RexKeyboardRemove();
 
@@ -127,13 +131,17 @@ void RexEngineExecute(void)
 	int floor_z, ceil_z, under;
 	int frame_count = 0;
 
+	#ifdef REX_DOS
+	div0_init(DM_SATURATE);
+	#endif
+
 	RexMouseShow(0);
 
-	RexGraphicsInstall(_MRES256COLOR);
+	RexGraphicsInstall("Portal2D", 320, 200);
 
-	RexPictureCreate(&pic_fbuffer, 320, 200, 8, 0, (void *)0xA0000);
+	RexPictureCreate(&pic_fbuffer, view.width, view.height, 8, 0, (void *)0xA0000);
 
-	RexPictureCreate(&pic_bbuffer, 320, 200, 8, 0, 0);
+	RexPictureCreate(&pic_bbuffer, view.width, view.height, 8, 0, 0);
 
 	RexPictureCreate(&pic_zbuffer, pic_fbuffer.width, pic_fbuffer.height, 16, 0, 0);
 	RexPictureCreate(&pic_stencil, pic_fbuffer.width, pic_fbuffer.height, 16, 0, 0);
@@ -400,6 +408,10 @@ void RexEngineExecute(void)
 			#endif
 		}
 	}
+
+	#ifdef REX_DOS
+	div0_close();
+	#endif
 }
 
 void RexEngineCreate(void)

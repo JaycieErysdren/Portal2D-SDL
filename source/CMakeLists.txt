@@ -15,6 +15,7 @@ set(PORTAL2D_SRC
 	sintable.c
 	math_x.c
 	math_i.c
+	pragmas.c
 	matrix.c
 	polygon.c
 	wall.c

@@ -10,14 +10,73 @@
 //
 // DESCRIPTION:		Generic Device I/O layer.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 8th, 2022
 //
 // ========================================================
 
 // SDL target
 #ifdef REX_SDL
 
+	// Keyboard scancodes
+	#define KB_ESC				SDL_SCANCODE_ESCAPE
+	#define KB_DNARROW			SDL_SCANCODE_DOWN
+	#define KB_LTARROW			SDL_SCANCODE_LEFT
+	#define KB_RTARROW			SDL_SCANCODE_RIGHT
+	#define KB_UPARROW			SDL_SCANCODE_UP
+	#define KB_ENTER			SDL_SCANCODE_RETURN
+	#define KB_CTRL				SDL_SCANCODE_LCTRL
+	#define KB_LTSHIFT			SDL_SCANCODE_LSHIFT
+	#define KB_RTSHIFT			SDL_SCANCODE_RSHIFT
+	#define KB_HOME				SDL_SCANCODE_HOME
+	#define KB_PAGEUP			SDL_SCANCODE_PAGEUP
+	#define KB_END				SDL_SCANCODE_END
+	#define KB_PAGEDN			SDL_SCANCODE_PAGEDOWN
+	#define KB_INSERT			SDL_SCANCODE_INSERT
+	#define KB_DELETE			SDL_SCANCODE_DELETE
+	#define KB_W				SDL_SCANCODE_W
+	#define KB_A				SDL_SCANCODE_A
+	#define KB_S				SDL_SCANCODE_S
+	#define KB_D				SDL_SCANCODE_D
+	#define KB_SPACE			SDL_SCANCODE_SPACE
+	#define KB_C				SDL_SCANCODE_C
 
+	// Keyboard variables
+	extern char keydown[128];
+	extern char keyprev[128];
+	extern char last_key;
+
+	// Keyboard defines
+	#define KEY_PRESSED(A) (keydown[A] != keyprev[A] && keydown[A])
+	#define KEY_DOWN(A) keydown[A]
+
+	// Keyboard functions
+	void RexKeyboardInstall(void);
+	void RexKeyboardRemove(void);
+
+	// Mouse functions
+	void RexMouseInstall(void);
+	void RexMouseShow(int);
+	int RexMouseRead(int* x, int* y);
+	void RexMouseSet(int* x, int* y);
+	int RexMousePress(int* x, int* y);
+
+	// Timer variables
+	extern unsigned timer;
+
+	// Timer functions
+	void RexTimerInstall(int target_speed);
+	void RexTimerRemove(void);
+
+	// Graphics definitions
+	#define GFX_DEFAULT			0x13
+
+	// Graphics functions
+	void RexGraphicsInstall(char *title, int width, int height);
+	void RexGraphicsRemove(void);
+
+	// Palette functions
+	void RexPaletteLoad(char *filename);
+	void RexPaletteInstall(PALETTE palette);
 
 #endif
 
@@ -80,7 +139,7 @@
 	#define GFX_DEFAULT			0x13
 
 	// Graphics functions
-	void RexGraphicsInstall(int mode);
+	void RexGraphicsInstall(char *title, int width, int height);
 	void RexGraphicsRemove(void);
 
 	// Palette functions
