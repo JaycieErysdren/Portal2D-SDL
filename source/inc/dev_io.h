@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Generic Device I/O layer.
 //
-// LAST EDITED:		October 8th, 2022
+// LAST EDITED:		October 9th, 2022
 //
 // ========================================================
 
@@ -67,11 +67,8 @@
 	void RexTimerInstall(int target_speed);
 	void RexTimerRemove(void);
 
-	// Graphics definitions
-	#define GFX_DEFAULT			0x13
-
 	// Graphics functions
-	void RexGraphicsInstall(char *title, int width, int height);
+	void RexGraphicsInstall(const char *title, int width, int height);
 	void RexGraphicsRemove(void);
 
 	// Palette functions
@@ -135,11 +132,8 @@
 	void RexTimerInstall(int target_speed);
 	void RexTimerRemove(void);
 
-	// Graphics definitions
-	#define GFX_DEFAULT			0x13
-
 	// Graphics functions
-	void RexGraphicsInstall(char *title, int width, int height);
+	void RexGraphicsInstall(const char *title, int width, int height);
 	void RexGraphicsRemove(void);
 
 	// Palette functions

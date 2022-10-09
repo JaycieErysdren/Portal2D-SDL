@@ -10,13 +10,17 @@
 //
 // DESCRIPTION:		Device IO abstractions.
 //
-// LAST EDITED:		October 8th, 2022
+// LAST EDITED:		October 9th, 2022
 //
 // ========================================================
 
 #include "rex.h"
 
 #ifdef REX_SDL
+
+	SDL_Texture *sdl_screen;
+	SDL_Renderer *sdl_renderer;
+	SDL_Window *sdl_window;
 
 	void RexMouseInstall(void)
 	{
@@ -81,14 +85,27 @@
 	// Graphics routines
 	//
 
-	void RexGraphicsInstall(char *title, int width, int height)
+	void RexGraphicsInstall(const char *title, int width, int height)
 	{
-		return;
+		if (SDL_Init(SDL_INIT_EVERYTHING) != 0) fail("SDL failed to initialize! (%s)", SDL_GetError());
+
+		sdl_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
+		if (sdl_window == NULL) fail("SDL Window failed to initialize! (%s)", SDL_GetError());
+
+		sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+		if (sdl_renderer == NULL) fail("SDL Renderer failed to initialize! (%s)", SDL_GetError());
+
+		sdl_screen = SDL_CreateTexture(sdl_renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, width, height);
 	}
 
 	void RexGraphicsRemove(void)
 	{
-		return;
+		SDL_DestroyTexture(sdl_screen);
+		SDL_DestroyRenderer(sdl_renderer);
+		SDL_DestroyWindow(sdl_window);
+		SDL_Quit();
 	}
 
 	void RexPaletteLoad(char *filename)
@@ -254,7 +271,7 @@
 	// Graphics routines
 	//
 
-	void RexGraphicsInstall(char *title, int width, int height)
+	void RexGraphicsInstall(const char *title, int width, int height)
 	{
 		_setvideomode(_MRES256COLOR);
 		//regs.x.eax = mode;
