@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Device IO abstractions.
 //
-// LAST EDITED:		October 9th, 2022
+// LAST EDITED:		October 10th, 2022
 //
 // ========================================================
 
@@ -39,8 +39,24 @@ int mouse_x, mouse_y;
 			switch (event.type)
 			{
 				case SDL_QUIT:
+				#ifdef DUMP_BUFFER
+				{
+
+					FILE *dumpfile;
+
+					dumpfile = fopen("dumpfile.dat", "wb");
+
+					fwrite(pic_bbuffer.buffer, 320 * 200, 1, dumpfile);
+					fclose(dumpfile);
+
+					RexEngineDestroy();
+				}
+					break;
+				#else
 					RexEngineDestroy();
 					break;
+				#endif
+
 				default:
 					break;
 			}

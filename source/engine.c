@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Main engine functions.
 //
-// LAST EDITED:		October 9th, 2022
+// LAST EDITED:		October 10th, 2022
 //
 // ========================================================
 
@@ -170,8 +170,6 @@ void RexEngineExecute(void)
 
 	for (tick = timer;;)
 	{
-		//FILE *dumpfile;
-
 		RexPictureLiquidEffect8(&textures[41], &textures[42], tick);
 		RexPictureLiquidEffect8(&textures[43], &textures[44], tick);
 
@@ -181,11 +179,20 @@ void RexEngineExecute(void)
 		RexRenderView(camera);
 		RexDevicesRead();
 
+		#ifdef DUMP_BUFFER
 		// dump screen buffer and then close
-		//dumpfile = fopen("dumpfile.dat", "wb");
-		//fwrite(pic_zbuffer.buffer, (320 * 200) * 2, 1, dumpfile);
-		//fclose(dumpfile);
-		//RexEngineDestroy();
+		if (KEY_DOWN(KB_C))
+		{
+			FILE *dumpfile;
+
+			dumpfile = fopen("dumpfile.dat", "wb");
+
+			fwrite(pic_bbuffer.buffer, 320 * 200, 1, dumpfile);
+			fclose(dumpfile);
+
+			RexEngineDestroy();
+		}
+		#endif
 
 		// reset position after reading it
 		RexMouseSet(&half_x, &half_y);

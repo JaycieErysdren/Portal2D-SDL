@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Main engine functions header.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 10th, 2022
 //
 // ========================================================
 
@@ -129,9 +129,9 @@ typedef struct
 // Scanlines union
 typedef union
 {
-	BYTE** b;
-	WORD** w;
-	DWORD** l;
+	BYTE **b;
+	WORD **w;
+	DWORD **l;
 } SCANLINES;
 
 // Picture datatype
