@@ -73,7 +73,10 @@ int isqr(int value)
 
 int imuldiv(int a, int b, int c)
 {
-	return safe_div((a * b), c);
+	long long ret = a;
+	ret *= b;
+	if (ret != 0 && c != 0) ret /= c;
+	return ret;
 }
 
 void memcpy32(long *Source, long *Destination, int Length)

@@ -23,8 +23,6 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 	POLYGON tmp1, tmp2;
 	int ys[MAX_POLYGON];
 
-	//printf("RexRenderPolygon: Function Start\n");
-
 	for (i = n; i--; ys[i] = src [i].x + src [i].z); n = RexPolygonClip(tmp2,  src, n, ys); // Left
 	for (i = n; i--; ys[i] = tmp2[i].z - tmp2[i].x); n = RexPolygonClip(tmp1, tmp2, n, ys); // Right
 	for (i = n; i--; ys[i] = tmp1[i].y + tmp1[i].z); n = RexPolygonClip(tmp2, tmp1, n, ys); // Top
@@ -48,14 +46,9 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 		int cx = i2f(width) >> 1;
 		int cy = i2f(height) >> 1;
 
-		//printf("RexRenderPolygon: n >= 3 (%d)\n", n);
-		//printf("RexRenderPolygon: y1 = %d, y2 = %d, cx = %d, cy = %d\n", y1, y2, cx, cy);
-
 		for (i = n; i--;)
 		{
 			VERTEX p = tmp1[i];
-
-			//printf("RexRenderPolygon: Looping: i = %d, n = %d\n", i, n);
 
 			p.z += 6; // 6 == 1 in view space.
 
@@ -70,19 +63,12 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 
 			if (tmp2[i].y < y1) {y1 = tmp2[i].y; lt_i = rt_i = i;}
 			if (tmp2[i].y > y2) {y2 = tmp2[i].y;}
-
-			//printf("RexRenderPolygon: y1 = %d, y2 = %d\n", y1, y2);
-			//printf("RexRenderPolygon: End Loop\n");
 		}
 
 		for (y1 = fixceil(y1), y2 = fixceil(y2); y1 < y2; y1++)
 		{
-			//printf("RexRenderPolygon: Looping: y1 = %d, y2 = %d\n", y1, y2);
-
 			if (--lt_length <= 0)
 			{
-				//printf("RexRenderPolygon: --lt_length <= 0 (lt_length = %d)\n", lt_length);
-
 				do
 				{
 					i = lt_i;
@@ -115,8 +101,6 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 
 			if (--rt_length <= 0)
 			{
-				//printf("RexRenderPolygon: --rt_length <= 0 (rt_length = %d)\n", rt_length);
-
 				do
 				{
 					i = rt_i;
@@ -148,8 +132,6 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 			}
 
 			xx = fixceil(rt_x) - (x = fixceil(lt_x));
-
-			//printf("RexRenderPolygon: xx is %d\n", xx);
 
 			if (xx > 0)
 			{
@@ -194,8 +176,6 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 						cc = ((w += ww16) - c) >> 4; \
 					} for (j = 0; j < xx; j++) {AFFINE(j)}
 
-				//printf("RexRenderPolygon: xx > 0\n");
-
 				if (tb)
 				{
 					if (surface->flags & SURFACE_OPAQUE)
@@ -236,11 +216,7 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 			lt_x += lt_xx; lt_z += lt_zz; lt_u += lt_uu; lt_v += lt_vv; lt_w += lt_ww;
 			rt_x += rt_xx; rt_z += rt_zz; rt_u += rt_uu; rt_v += rt_vv; rt_w += rt_ww;
 		}
-
-		//printf("RexRenderPolygon: y1 = %d, y2 = %d\n", y1, y2);
 	}
-
-	//printf("RexRenderPolygon: Function End\n----------------\n\n");
 }
 
 void RexRenderPolygonGL(POLYGON polygon, int n, SURFACE *surface, int id, MATRIX matrix)
@@ -389,6 +365,10 @@ void RexRenderView(OBJECT *camera)
 
 	// Clear the zbuffer.
 	RexPictureClear(&pic_zbuffer);
+	
+	#ifdef REX_SDL
+	RexPictureClear(&pic_bbuffer);
+	#endif
 
 	if (camera->sid)
 	{
@@ -406,13 +386,10 @@ void RexRenderView(OBJECT *camera)
 		RexRenderObject(2, matrix);
 	}
 
-	//RexRenderConsole();
-
-	//RexMouseRead(&x, &y);
-
-	//picture_draw8(&pic_bbuffer, &pic_arrow, x, y, PICTURE_MODE_COLORKEY);
+	#ifdef REX_DOS
+	RexRenderConsole();
+	#endif
 
 	// Copy view buffer to video memory.
 	RexDoubleBuffer();
-	//RexPictureCopy(&pic_fbuffer, &pic_bbuffer);
 }

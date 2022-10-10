@@ -10,13 +10,18 @@
 //
 // DESCRIPTION:		Integer math.
 //
-// LAST EDITED:		October 8th, 2022
+// LAST EDITED:		October 10th, 2022
 //
 // ========================================================
 
 int isqrt(int value);
 
 int imin(int a, int b);
+int imax(int a, int b);
+int isqr(int value);
+int imuldiv(int a, int b, int c);
+void memcpy32(long *Source, long *Destination, int Length);
+
 #pragma aux imin = \
 	"cmp eax, ebx", \
 	"jl skipit", \
@@ -25,7 +30,6 @@ int imin(int a, int b);
 	parm nomemory [eax][ebx] \
 	modify exact [eax];
 
-int imax(int a, int b);
 #pragma aux imax = \
 	"cmp eax, ebx", \
 	"jg skipit", \
@@ -34,17 +38,14 @@ int imax(int a, int b);
 	parm nomemory [eax][ebx] \
 	modify exact [eax];
 
-int isqr(int value);
 #pragma aux isqr = \
 	"imul eax, eax", \
 	parm nomemory [eax] \
 	modify exact [eax] \
 	value [eax];
 
-int imuldiv(int a, int b, int c);
 #pragma aux imuldiv parm [eax] [edx] [ebx] modify exact [eax edx] = \
 	"imul edx" \
 	"idiv ebx";
 
-void memcpy32(long *Source, long *Destination, int Length);
 #pragma aux memcpy32 = " rep movsd " parm [EDI] [ESI] [ECX] modify [EDI ESI ECX];

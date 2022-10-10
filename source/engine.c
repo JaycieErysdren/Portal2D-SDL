@@ -179,6 +179,43 @@ void RexEngineExecute(void)
 		RexRenderView(camera);
 		RexDevicesRead();
 
+		#ifdef REX_SDL
+
+		RexObjectUpdate(thing);
+		thing->rot.y += 2;
+
+		RexObjectUpdate(camera);
+		RexObjectCollision(camera);
+
+		RexSectorZ(camera->sid, camera->x, camera->y, &floor_z, &ceil_z, 0);
+
+		if (KEY_DOWN(KB_W))
+		{
+			camera->xx += imuldiv(fixsin(camera->rot.y), 6, 8);
+			camera->yy += imuldiv(fixcos(camera->rot.y), 6, 8);
+		}
+		if (KEY_DOWN(KB_S))
+		{
+			camera->xx -= imuldiv(fixsin(camera->rot.y), 6, 8);
+			camera->yy -= imuldiv(fixcos(camera->rot.y), 6, 8);
+		}
+		if (KEY_DOWN(KB_A))
+		{
+			camera->xx -= imuldiv(fixcos(camera->rot.y), 6, 8);
+			camera->yy += imuldiv(fixsin(camera->rot.y), 6, 8);
+		}
+		if (KEY_DOWN(KB_D))
+		{
+			camera->xx += imuldiv(fixcos(camera->rot.y), 6, 8);
+			camera->yy -= imuldiv(fixsin(camera->rot.y), 6, 8);
+		}
+		if (KEY_PRESSED(KB_SPACE)) camera->zz += fl2f(15);
+		if (KEY_DOWN(KB_CTRL)) camera->zz -= fl2f(0.7);
+		if (KEY_DOWN(KB_RTARROW)) camera->rot.y += 7;
+		if (KEY_DOWN(KB_LTARROW)) camera->rot.y -= 7;
+
+		#endif
+
 		#ifdef DUMP_BUFFER
 		// dump screen buffer and then close
 		if (KEY_DOWN(KB_C))
