@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Fixed-point math header.
 //
-// LAST EDITED:		October 8th, 2022
+// LAST EDITED:		October 10th, 2022
 //
 // ========================================================
 
@@ -21,12 +21,12 @@
 
 #define FRACCEIL 0xFFFF
 
-#define f2i(a) ((a)>>16)
-#define i2f(a) ((a)<<16)
-#define f2fl(a) (((float)(a))/ i2f(1))
-#define fl2f(a) ((int)((a)*i2f(1)))
+#define f2i(a) ((a) >> 16)
+#define i2f(a) ((a) << 16)
+#define f2fl(a) (((float)(a)) / i2f(1))
+#define fl2f(a) ((int)((a) * i2f(1)))
 
-#define fixceil(A) (((A)+0xFFFF)>>16)
+#define fixceil(A) (((A) + 0xFFFF) >> 16)
 
 extern int sintable[2048];
 

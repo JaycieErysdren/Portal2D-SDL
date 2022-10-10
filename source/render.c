@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Rendering functions.
 //
-// LAST EDITED:		October 9th, 2022
+// LAST EDITED:		October 10th, 2022
 //
 // ========================================================
 
@@ -22,6 +22,8 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 	int i;
 	POLYGON tmp1, tmp2;
 	int ys[MAX_POLYGON];
+
+	printf("RexRenderPolygon: Function Start\n");
 
 	for (i = n; i--; ys[i] = src [i].x + src [i].z); n = RexPolygonClip(tmp2,  src, n, ys); // Left
 	for (i = n; i--; ys[i] = tmp2[i].z - tmp2[i].x); n = RexPolygonClip(tmp1, tmp2, n, ys); // Right
@@ -35,6 +37,8 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 		int rt_i, rt_x, rt_xx, rt_z, rt_zz, rt_u, rt_uu, rt_v, rt_vv, rt_w, rt_ww;
 		int x, xx;
 
+		printf("RexRenderPolygon: n >= 3 (%d)\n", n);
+
 		TEXTURE66 *tb = textures[surface->texture].buffer;
 		LIGHTMAP *lb = lightmaps[(surface->light + 16) & 31];
 
@@ -43,12 +47,16 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 		int y1 = INT_MAX;
 		int y2 = INT_MIN;
 
-		int cx = i2f(width ) >> 1;
+		int cx = i2f(width) >> 1;
 		int cy = i2f(height) >> 1;
+
+		printf("RexRenderPolygon: y1 = %d, y2 = %d, cx = %d, cy = %d\n", y1, y2, cx, cy);
 
 		for (i = n; i--;)
 		{
 			VERTEX p = tmp1[i];
+
+			printf("RexRenderPolygon: Looping: i = %d, n = %d\n", i, n);
 
 			p.z += 6; // 6 == 1 in view space.
 
@@ -63,11 +71,18 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 
 			if (tmp2[i].y < y1) {y1 = tmp2[i].y; lt_i = rt_i = i;}
 			if (tmp2[i].y > y2) {y2 = tmp2[i].y;}
+
+			printf("RexRenderPolygon: End Loop\n");
 		}
+
 		for (y1 = fixceil(y1), y2 = fixceil(y2); y1 < y2; y1++)
 		{
+			printf("RexRenderPolygon: Looping: y1 = %d, y2 = %d\n", y1, y2);
+
 			if (--lt_length <= 0)
 			{
+				printf("RexRenderPolygon: --lt_length <= 0 (lt_length = %d)\n", lt_length);
+
 				do
 				{
 					i = lt_i;
@@ -97,8 +112,11 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 
 				assert(y1 == ys[i]);
 			}
+
 			if (--rt_length <= 0)
 			{
+				printf("RexRenderPolygon: --rt_length <= 0 (rt_length = %d)\n", rt_length);
+
 				do
 				{
 					i = rt_i;
@@ -128,13 +146,18 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 
 				assert(y1 == ys[i]);
 			}
+
 			xx = fixceil(rt_x) - (x = fixceil(lt_x));
+
+			printf("RexRenderPolygon: xx is %d\n", xx);
 
 			if (xx > 0)
 			{
 				BYTE *fb = &pic_bbuffer.scanlines.b[y1][x];
 				WORD *sb = &pic_stencil.scanlines.w[y1][x];
 				WORD *zb = &pic_zbuffer.scanlines.w[y1][x];
+
+				printf("RexRenderPolygon: xx > 0\n");
 
 				#ifdef RENDER_RECIPROCAL
 					int zz = fixmul(rt_z - lt_z, j = fixinv(rt_x - lt_x));
@@ -213,7 +236,11 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 			lt_x += lt_xx; lt_z += lt_zz; lt_u += lt_uu; lt_v += lt_vv; lt_w += lt_ww;
 			rt_x += rt_xx; rt_z += rt_zz; rt_u += rt_uu; rt_v += rt_vv; rt_w += rt_ww;
 		}
+
+		printf("RexRenderPolygon: y1 = %d, y2 = %d\n", y1, y2);
 	}
+
+	printf("RexRenderPolygon: Function End\n----------------\n\n");
 }
 
 void RexRenderPolygonGL(POLYGON polygon, int n, SURFACE *surface, int id, MATRIX matrix)
