@@ -17,6 +17,10 @@
 #include "rex.h"
 
 int mouse_x, mouse_y;
+	
+char rx_keys[512];
+char rx_keys_prev[512];
+char rx_key_last;
 
 #ifdef REX_SDL
 
@@ -56,6 +60,13 @@ int mouse_x, mouse_y;
 					RexEngineDestroy();
 					break;
 				#endif
+
+				case SDL_KEYDOWN:
+					rx_keys[event.key.keysym.scancode] = SDL_TRUE;
+					break;
+				case SDL_KEYUP:
+					rx_keys[event.key.keysym.scancode] = SDL_FALSE;
+					break;
 
 				default:
 					break;
@@ -111,10 +122,6 @@ int mouse_x, mouse_y;
 	//
 	// Keyboard routines
 	//
-
-	char keydown[128];
-	char keyprev[128];
-	char last_key;
 
 	void RexKeyboardRemove(void)
 	{
@@ -311,16 +318,12 @@ int mouse_x, mouse_y;
 	// Keyboard routines
 	//
 
-	char keydown[128];
-	char keyprev[128];
-	char last_key;
-
 	static void (__interrupt __far* __keyboard_interrupt)();
 
 	void __interrupt __far keyboard_interrupt(void)
 	{
 		int c = inp(0x60);
-		keydown[last_key = c & 0x7F] = !(c & 0x80);
+		rx_keys[rx_key_last = c & 0x7F] = !(c & 0x80);
 
 		outp(0x20, 0x20);
 	}
@@ -341,8 +344,8 @@ int mouse_x, mouse_y;
 		_disable();
 		if (!__keyboard_interrupt)
 		{
-			memset(keydown, 0, sizeof(keydown));
-			memset(keyprev, 0, sizeof(keyprev));
+			memset(rx_keys, 0, sizeof(rx_keys));
+			memset(rx_keys_prev, 0, sizeof(rx_keys_prev));
 			__keyboard_interrupt = _dos_getvect(9);
 			_dos_setvect(9, keyboard_interrupt);
 		}

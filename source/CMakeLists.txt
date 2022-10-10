@@ -12,6 +12,9 @@ include_directories(inc)
 
 add_compile_definitions("REX_SDL")
 
+# add_compile_options(-m32)
+# add_link_options(-m32)
+
 set(PORTAL2D_SRC
 	utils.c
 	sintable.c

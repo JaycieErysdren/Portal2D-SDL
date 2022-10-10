@@ -10,11 +10,18 @@
 //
 // DESCRIPTION:		Generic Device I/O layer.
 //
-// LAST EDITED:		October 9th, 2022
+// LAST EDITED:		October 10th, 2022
 //
 // ========================================================
 
 extern int mouse_x, mouse_y;
+
+extern char rx_keys[512];
+extern char rx_keys_prev[512];
+extern char rx_key_last;
+
+#define KEY_PRESSED(A) (rx_keys[A] != rx_keys_prev[A] && rx_keys[A])
+#define KEY_DOWN(A) rx_keys[A]
 
 // Input routines
 void RexDevicesRead(void);
@@ -44,15 +51,6 @@ void RexDevicesRead(void);
 	#define KB_D				SDL_SCANCODE_D
 	#define KB_SPACE			SDL_SCANCODE_SPACE
 	#define KB_C				SDL_SCANCODE_C
-
-	// Keyboard variables
-	extern char keydown[128];
-	extern char keyprev[128];
-	extern char last_key;
-
-	// Keyboard defines
-	#define KEY_PRESSED(A) (keydown[A] != keyprev[A] && keydown[A])
-	#define KEY_DOWN(A) keydown[A]
 
 	// Keyboard functions
 	void RexKeyboardInstall(void);
@@ -110,15 +108,6 @@ void RexDevicesRead(void);
 	#define KB_D				32
 	#define KB_SPACE			57
 	#define KB_C				46
-
-	// Keyboard variables
-	extern char keydown[128];
-	extern char keyprev[128];
-	extern char last_key;
-
-	// Keyboard defines
-	#define KEY_PRESSED(A) (keydown[A] != keyprev[A] && keydown[A])
-	#define KEY_DOWN(A) keydown[A]
 
 	// Keyboard functions
 	void RexKeyboardInstall(void);

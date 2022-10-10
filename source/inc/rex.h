@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		Global Rex Engine header.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 10th, 2022
 //
 // ========================================================
 
@@ -45,6 +45,8 @@
 	#include "div0.h"
 
 #endif
+
+#define DUMP_BUFFER 1
 
 // Datatypes
 #ifndef __TYPES_H__

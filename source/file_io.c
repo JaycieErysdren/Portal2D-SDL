@@ -10,7 +10,7 @@
 //
 // DESCRIPTION:		File I/O functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 10th, 2022
 //
 // ========================================================
 
@@ -100,5 +100,9 @@ void RexLevelLoad(PATH fn)
 	{
 		RexLevelRead(fp);
 		fclose(fp);
+	}
+	else
+	{
+		fail("Failed to load level %s", fn);
 	}
 }

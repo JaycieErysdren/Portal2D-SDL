@@ -132,8 +132,6 @@ void RexEngineExecute(void)
 	int floor_z, ceil_z, under;
 	int frame_count = 0;
 
-	printf("RexEngineExecute: Function Start\n");
-
 	#ifdef REX_DOS
 	div0_init(DM_SATURATE);
 	#endif
@@ -172,16 +170,11 @@ void RexEngineExecute(void)
 
 	for (tick = timer;;)
 	{
-		printf("RexEngineExecute: Main Loop Start\n");
 		RexPictureLiquidEffect8(&textures[41], &textures[42], tick);
 		RexPictureLiquidEffect8(&textures[43], &textures[44], tick);
 
 		RexPictureBlend8(&textures[113], &textures[41], &textures[15], blender);
 		RexPictureBlend8(&textures[114], &textures[41], &textures[64], blender);
-
-		RexObjectUpdate(camera);
-		RexObjectCollision(camera);
-		RexSectorZ(camera->sid, camera->x, camera->y, &floor_z, &ceil_z, 0);
 
 		RexRenderView(camera);
 		RexDevicesRead();
@@ -206,7 +199,7 @@ void RexEngineExecute(void)
 
 		#ifdef REX_DOS
 		sprintf(sbuf, "Key:%3d X:%4d Y:%4d Z:%4d SID:%d",
-			last_key,
+			rx_key_last,
 			camera->x,
 			camera->y,
 			camera->z,
@@ -412,19 +405,15 @@ void RexEngineExecute(void)
 			#endif
 
 			#ifdef REX_DOS
-				memcpy(keyprev, keydown, sizeof(keyprev));
+				memcpy(rx_keys_prev, rx_keys, sizeof(rx_keys_prev));
 			#endif
 		}
 		#endif
-
-		printf("RexEngineExecute: Main Loop End\n");
 	}
 
 	#ifdef REX_DOS
 	div0_close();
 	#endif
-
-	printf("RexEngineExecute: Function End\n");
 }
 
 void RexEngineCreate(void)
