@@ -381,7 +381,7 @@ void RexRenderView(OBJECT *camera)
 
 	//RexRenderConsole();
 
-	RexMouseRead(&x, &y);
+	//RexMouseRead(&x, &y);
 
 	//picture_draw8(&pic_bbuffer, &pic_arrow, x, y, PICTURE_MODE_COLORKEY);
 

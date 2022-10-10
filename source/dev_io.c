@@ -32,6 +32,8 @@ int mouse_x, mouse_y;
 	{
 		SDL_Event event;
 
+		timer++;
+
 		while (SDL_PollEvent(&event))
 		{
 			switch (event.type)

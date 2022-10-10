@@ -170,6 +170,8 @@ void RexEngineExecute(void)
 
 	for (tick = timer;;)
 	{
+		//FILE *dumpfile;
+
 		RexPictureLiquidEffect8(&textures[41], &textures[42], tick);
 		RexPictureLiquidEffect8(&textures[43], &textures[44], tick);
 
@@ -178,6 +180,12 @@ void RexEngineExecute(void)
 
 		RexRenderView(camera);
 		RexDevicesRead();
+
+		// dump screen buffer and then close
+		//dumpfile = fopen("dumpfile.dat", "wb");
+		//fwrite(pic_zbuffer.buffer, (320 * 200) * 2, 1, dumpfile);
+		//fclose(dumpfile);
+		//RexEngineDestroy();
 
 		// reset position after reading it
 		RexMouseSet(&half_x, &half_y);
@@ -198,6 +206,7 @@ void RexEngineExecute(void)
 		RexConsoleOutText(0, 1, sbuf);
 		#endif
 
+		#ifdef REX_DOS
 		for (; tick < timer; tick++)
 		{
 			camera->zz -= fl2f(0.4); // Gravity
@@ -392,6 +401,7 @@ void RexEngineExecute(void)
 				memcpy(keyprev, keydown, sizeof(keyprev));
 			#endif
 		}
+		#endif
 	}
 
 	#ifdef REX_DOS
