@@ -16,11 +16,38 @@
 
 #include "rex.h"
 
+int mouse_x, mouse_y;
+
 #ifdef REX_SDL
 
 	SDL_Texture *sdl_screen;
 	SDL_Renderer *sdl_renderer;
 	SDL_Window *sdl_window;
+
+	//
+	// Input routines
+	//
+
+	void RexDevicesRead(void)
+	{
+		SDL_Event event;
+
+		while (SDL_PollEvent(&event))
+		{
+			switch (event.type)
+			{
+				case SDL_QUIT:
+					RexEngineDestroy();
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	//
+	// Mouse routines
+	//
 
 	void RexMouseInstall(void)
 	{
@@ -119,7 +146,26 @@
 
 	void RexPaletteLoad(char *filename)
 	{
-		return;
+		FILE *palette_file;
+		int i;
+
+		palette_file = fopen(filename, "rb");
+
+		if (palette_file == NULL)
+			fail("Failed to load palette file %s", filename);
+
+		for (i = 0; i < 256; i++)
+		{
+			unsigned char r = getc(palette_file);
+			unsigned char g = getc(palette_file);
+			unsigned char b = getc(palette_file);
+
+			palette[i][0] = r;
+			palette[i][1] = g;
+			palette[i][2] = b;
+		}
+
+		fclose(palette_file);
 	}
 
 	void RexPaletteInstall(PALETTE palette)
@@ -136,6 +182,15 @@
 	//
 
 	static union REGS regs;
+
+	//
+	// Input routines
+	//
+
+	void RexDevicesRead(void)
+	{
+		RexMouseRead(&mouse_x, &mouse_y);
+	}
 
 	//
 	// Mouse routines
@@ -300,7 +355,6 @@
 	void RexPaletteLoad(char *filename)
 	{
 		FILE *palette_file;
-		long setpal[256];
 		int i;
 
 		palette_file = fopen(filename, "rb");

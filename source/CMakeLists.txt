@@ -34,3 +34,10 @@ set(PORTAL2D_SRC
 )
 
 add_executable(portal2d ${PORTAL2D_SRC})
+
+set_target_properties(portal2d
+	PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/../game"
+	LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/../game"
+	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/../game"
+)

@@ -14,6 +14,11 @@
 //
 // ========================================================
 
+extern int mouse_x, mouse_y;
+
+// Input routines
+void RexDevicesRead(void);
+
 // SDL target
 #ifdef REX_SDL
 

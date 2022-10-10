@@ -122,8 +122,6 @@ void RexEngineDestroy(void)
 
 void RexEngineExecute(void)
 {
-	int mouse_x, mouse_y;
-
 	int half_x = 160, half_y = 100;
 
 	#ifdef EDITABLE_SURFACES
@@ -179,7 +177,7 @@ void RexEngineExecute(void)
 		RexPictureBlend8(&textures[114], &textures[41], &textures[64], blender);
 
 		RexRenderView(camera);
-		RexMouseRead(&mouse_x, &mouse_y);
+		RexDevicesRead();
 
 		// reset position after reading it
 		RexMouseSet(&half_x, &half_y);
