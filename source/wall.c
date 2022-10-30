@@ -4,19 +4,20 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Wall handling functions.
 //
-// LAST EDITED:		October 8th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
-int RexWallCreate(int sid)
+int WallCreate(int sid)
 {
 	int wid;
 
@@ -35,7 +36,7 @@ int RexWallCreate(int sid)
 }
 
 // extrude a wall into a polygon. prepare u, v texture coordinates.
-void RexWallExtrude(int wid, POLYGON polygon)
+void WallExtrude(int wid, POLYGON polygon)
 {
 	// Construct a polygon from a wall. We also assign texture UV's.
 
@@ -71,7 +72,7 @@ void RexWallExtrude(int wid, POLYGON polygon)
 	polygon[3].w = a->bot.w;
 }
 
-int RexLightCalc(int x, int y, int z)
+int LightCalc(int x, int y, int z)
 {
 	int t = 0xFFFF;
 
@@ -79,17 +80,11 @@ int RexLightCalc(int x, int y, int z)
 	y = (y & t) - (t >> 1);
 	z = (z & t) - (t >> 1);
 
-	#ifdef REX_DOS
 	return imax(imin(tmulscale10(x, x, y, y, z, z), i2f(30)), 0);
-	#endif
-
-	#ifdef REX_SDL
-	return imax(imin(tmulscale(x, x, y, y, z, z, 10), i2f(30)), 0);
-	#endif
 }
 
 // transform a wall into camera space.
-void RexWallTransform(int wid, MATRIX matrix)
+void WallTransform(int wid, MATRIX matrix)
 {
 	int top, bot, mid, x, y;
 
@@ -108,7 +103,7 @@ void RexWallTransform(int wid, MATRIX matrix)
 		a->length = isqrt(isqr(dx) + isqr(dy));
 	}
 
-	RexSectorZ(a->sid, a->x, a->y, &bot, &top, &mid);
+	SectorZ(a->sid, a->x, a->y, &bot, &top, &mid);
 
 	a->top.u = i2f(a->length); a->top.v = top << 10;
 	a->bot.u = i2f(a->length); a->bot.v = bot << 10;
@@ -119,27 +114,27 @@ void RexWallTransform(int wid, MATRIX matrix)
 	a->top.x = fixdot3(x, matrix[0][0], top, matrix[0][1], y, matrix[0][2]) + matrix[0][3];
 	a->top.y = fixdot3(x, matrix[1][0], top, matrix[1][1], y, matrix[1][2]) + matrix[1][3];
 	a->top.z = fixdot3(x, matrix[2][0], top, matrix[2][1], y, matrix[2][2]) + matrix[2][3];
-	a->top.w = RexLightCalc(x, y, top);
+	a->top.w = LightCalc(x, y, top);
 
 	a->bot.x = fixdot3(x, matrix[0][0], bot, matrix[0][1], y, matrix[0][2]) + matrix[0][3];
 	a->bot.y = fixdot3(x, matrix[1][0], bot, matrix[1][1], y, matrix[1][2]) + matrix[1][3];
 	a->bot.z = fixdot3(x, matrix[2][0], bot, matrix[2][1], y, matrix[2][2]) + matrix[2][3];
-	a->bot.w = RexLightCalc(x, y, bot);
+	a->bot.w = LightCalc(x, y, bot);
 
 	a->mid.x = fixdot3(x, matrix[0][0], mid, matrix[0][1], y, matrix[0][2]) + matrix[0][3];
 	a->mid.y = fixdot3(x, matrix[1][0], mid, matrix[1][1], y, matrix[1][2]) + matrix[1][3];
 	a->mid.z = fixdot3(x, matrix[2][0], mid, matrix[2][1], y, matrix[2][2]) + matrix[2][3];
-	a->mid.w = RexLightCalc(x, y, mid);
+	a->mid.w = LightCalc(x, y, mid);
 }
 
 // returns true if two walls are linked.
-int RexWallsLinked(int w1, int w2)
+int WallsLinked(int w1, int w2)
 {
 	return w1 == NEXT_WALL(w2) || w2 == NEXT_WALL(w1);
 }
 
 // returns true if two walls touch. therefore they are portals.
-int RexWallsTouch(int w1, int w2)
+int WallsTouch(int w1, int w2)
 {
 	WALL* a = &walls[w1];
 	WALL* b = &walls[w2];
@@ -149,14 +144,14 @@ int RexWallsTouch(int w1, int w2)
 }
 
 // calculate the normal of a wall. the normal has the length of the wall, therefore you should adjust for the scale.
-void RexWallNormal(int wid, int* x, int* y)
+void WallNormal(int wid, int* x, int* y)
 {
 	*x = walls[walls[wid].next].y - walls[wid].y;
 	*y = walls[wid].x - walls[walls[wid].next].x;
 }
 
 // returns the points of a wall. not really useful. this is for reference.
-void RexWallLine(int wid, int* x1, int* y1, int* x2, int* y2)
+void WallLine(int wid, int* x1, int* y1, int* x2, int* y2)
 {
 	*x1 = walls[wid].x;
 	*y1 = walls[wid].y;
@@ -165,22 +160,16 @@ void RexWallLine(int wid, int* x1, int* y1, int* x2, int* y2)
 }
 
 // returns true if a wall is visible from a given point. (based on a dot product)
-int RexWallIsVisible(int wid, int x, int y)
+int WallIsVisible(int wid, int x, int y)
 {
 	int nx = walls[walls[wid].next].y - walls[wid].y;
 	int ny = walls[wid].x - walls[walls[wid].next].x;
 
-	#ifdef REX_DOS
 	return dmulscale25(nx, x - walls[wid].x, ny, y - walls[wid].y) >= 0;
-	#endif
-
-	#ifdef REX_SDL
-	return dmulscale(nx, x - walls[wid].x, ny, y - walls[wid].y, 25) >= 0;
-	#endif
 }
 
 // extract a wall segment.
-int RexWallSegment(VECTOR poly[], int w1, int w2)
+int WallSegment(VECTOR poly[], int w1, int w2)
 {
 	int n = 0, wid;
 
@@ -196,7 +185,7 @@ int RexWallSegment(VECTOR poly[], int w1, int w2)
 }
 
 // Returns the closest point on a wall to a given point.
-POINT RexWallClosestPoint(int wid, int x, int y)
+POINT WallClosestPoint(int wid, int x, int y)
 {
 	POINT result;
 	WALL* a = &walls[wid];

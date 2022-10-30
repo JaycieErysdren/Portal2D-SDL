@@ -4,17 +4,18 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		The program's main entry point.
 //
-// LAST EDITED:		October 9th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
 void main(int argc, char *argv[])
 {
@@ -27,34 +28,34 @@ void main(int argc, char *argv[])
 	view.zoom_div = WORLD_UNIT;
 	view.grid = WORLD_UNIT * 8;
 
-	RexEngineCreate();
+	EngineCreate();
 
-	RexMouseShow(1);
+	MouseShow(1);
 
 	if (start_map)
 	{
-		RexLevelLoad(start_map);
+		LevelLoad(start_map);
 
 		for (;;)
 		{
-			RexEngineExecute();
+			EngineExecute();
 
 			if (view.key == 'q') break;
 		}
 	}
 	else
 	{
-		RexLevelLoad("test.map");
+		LevelLoad("test.map");
 
 		for (;;)
 		{
-			RexEngineExecute();
+			EngineExecute();
 
 			if (view.key == 'q') break;
 		}
 	}
 
-	RexEngineDestroy();
+	EngineDestroy();
 
 	exit(EXIT_SUCCESS);
 }

@@ -4,26 +4,27 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Matrix functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
 // Copies the contents of one matrix to another.
-void RexMatrixCopy(MATRIX dst, MATRIX src)
+void MatrixCopy(MATRIX dst, MATRIX src)
 {
 	memcpy(dst, src, sizeof(MATRIX));
 }
 
 // Returns a identity matrix.
-void RexMatrixIdentity(MATRIX dst)
+void MatrixIdentity(MATRIX dst)
 {
 	MATRIX src =
 	{
@@ -33,47 +34,47 @@ void RexMatrixIdentity(MATRIX dst)
 		{i2f(0), i2f(0), i2f(0), i2f(1)}
 	};
 
-	RexMatrixCopy(dst, src);
+	MatrixCopy(dst, src);
 }
 
-void RexMatrixPosition(MATRIX dst, int x, int y, int z)
+void MatrixPosition(MATRIX dst, int x, int y, int z)
 {
-	RexMatrixIdentity(dst);
+	MatrixIdentity(dst);
 	dst[0][3] = x;
 	dst[1][3] = y;
 	dst[2][3] = z;
 }
 
-void RexMatrixScale(MATRIX dst, int x, int y, int z)
+void MatrixScale(MATRIX dst, int x, int y, int z)
 {
-	RexMatrixIdentity(dst);
+	MatrixIdentity(dst);
 	dst[0][0] = x;
 	dst[1][1] = y;
 	dst[2][2] = z;
 }
 
-void RexMatrixRotateX(MATRIX dst, int angle)
+void MatrixRotateX(MATRIX dst, int angle)
 {
-	RexMatrixIdentity(dst);
+	MatrixIdentity(dst);
 	dst[1][1] =   (dst[2][2] = fixcos(angle));
 	dst[1][2] = - (dst[2][1] = fixsin(angle));
 }
 
-void RexMatrixRotateY(MATRIX dst, int angle)
+void MatrixRotateY(MATRIX dst, int angle)
 {
-	RexMatrixIdentity(dst);
+	MatrixIdentity(dst);
 	dst[0][0] =   (dst[2][2] = fixcos(angle));
 	dst[0][2] = - (dst[2][0] = fixsin(angle));
 }
 
-void RexMatrixRotateZ(MATRIX dst, int angle)
+void MatrixRotateZ(MATRIX dst, int angle)
 {
-	RexMatrixIdentity(dst);
+	MatrixIdentity(dst);
 	dst[0][0] =   (dst[1][1] = fixcos(angle));
 	dst[0][1] = - (dst[1][0] = fixsin(angle));
 }
 
-void RexMatrixMultiply(MATRIX dst, MATRIX ma1, MATRIX ma2)
+void MatrixMultiply(MATRIX dst, MATRIX ma1, MATRIX ma2)
 {
 	int i, j;
 	MATRIX tmp;
@@ -90,10 +91,10 @@ void RexMatrixMultiply(MATRIX dst, MATRIX ma1, MATRIX ma2)
 		}
 	}
 
-	RexMatrixCopy(dst, tmp);
+	MatrixCopy(dst, tmp);
 }
 
-void RexMatrixTranspose(MATRIX dst, MATRIX src)
+void MatrixTranspose(MATRIX dst, MATRIX src)
 {
 	int x, y;
 

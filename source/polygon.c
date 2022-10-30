@@ -4,20 +4,21 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Polygon handling functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
 // clip a polygon to a pre-calculated distance table.
-int RexPolygonClip(POLYGON dst, POLYGON src, int n, int dist[])
+int PolygonClip(POLYGON dst, POLYGON src, int n, int dist[])
 {
 	int r = 0, a, b, t;
 
@@ -47,22 +48,22 @@ int RexPolygonClip(POLYGON dst, POLYGON src, int n, int dist[])
 }
 
 // clip a polygon to the frustrum.
-int RexPolygonClipToFrustrum(POLYGON dst, POLYGON src, int n)
+int PolygonClipToFrustrum(POLYGON dst, POLYGON src, int n)
 {
 	int i;
 	int dist[MAX_POLYGON];
 	POLYGON tmp;
 
-	for (i = n; i--; dist[i] = src[i].x  + src[i].z); n = RexPolygonClip(tmp, src, n, dist); // Left
-	for (i = n; i--; dist[i] = tmp[i].z  - tmp[i].x); n = RexPolygonClip(dst, tmp, n, dist); // Right
-	for (i = n; i--; dist[i] = dst[i].y  + dst[i].z); n = RexPolygonClip(tmp, dst, n, dist); // Top
-	for (i = n; i--; dist[i] = tmp[i].z  - tmp[i].y); n = RexPolygonClip(dst, tmp, n, dist); // Bottom
+	for (i = n; i--; dist[i] = src[i].x  + src[i].z); n = PolygonClip(tmp, src, n, dist); // Left
+	for (i = n; i--; dist[i] = tmp[i].z  - tmp[i].x); n = PolygonClip(dst, tmp, n, dist); // Right
+	for (i = n; i--; dist[i] = dst[i].y  + dst[i].z); n = PolygonClip(tmp, dst, n, dist); // Top
+	for (i = n; i--; dist[i] = tmp[i].z  - tmp[i].y); n = PolygonClip(dst, tmp, n, dist); // Bottom
 
 	return n;
 }
 
 // project a polygon into screen space. prepare z, u & v for linear interpolation.
-void RexPolygonProject(POLYGON dst, POLYGON src, int n, int width, int height, SURFACE* surface)
+void PolygonProject(POLYGON dst, POLYGON src, int n, int width, int height, SURFACE* surface)
 {
 	int cx = i2f(width ) >> 1;
 	int cy = i2f(height) >> 1;

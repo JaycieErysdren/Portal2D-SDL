@@ -4,13 +4,13 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Main engine functions header.
 //
-// LAST EDITED:		October 10th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
@@ -222,9 +222,9 @@ extern PALETTE					palette;
 
 // Function prototypes
 
-void RexLightmapsCreate(LIGHTMAP lightmap, PALETTE palette, int brightness);
-void RexTablesCreate(void);
+void LightmapsCreate(LIGHTMAP lightmap, PALETTE palette, int brightness);
+void TablesCreate(void);
 
-void RexEngineDestroy(void);
-void RexEngineExecute(void);
-void RexEngineCreate(void);
+void EngineDestroy(void);
+void EngineExecute(void);
+void EngineCreate(void);

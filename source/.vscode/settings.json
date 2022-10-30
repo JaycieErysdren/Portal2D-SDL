@@ -4,24 +4,16 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		VSCode settings.
 //
-// LAST EDITED:		October 3rd, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
 {
 	"C_Cpp.errorSquiggles": "Disabled",
-	"files.exclude": {
-		"**/*.err": true,
-		"**/*.exe": true,
-		"**/*.lnk": true,
-		"**/*.obj": true,
-		"**/*.o": true,
-		"**/*.lib": true
-   }
 }

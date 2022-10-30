@@ -1,8 +1,6 @@
-# Portal2D-SDL
+# Portal2D
 
-Trying to port the Portal2D engine, originally written in 1999 by Derek John Evans, to SDL2.
-
-It's a software-rendered portal-based 2.5D engine. At the moment it compiles successfully for DOS with Open Watcom v2.
+It's a software-rendered portal-based 2.5D engine, originally written in the summer of 1999 by Derek John Evans.
 
 I've written and included a Kaitai Struct definitions file for the Portal2D level format. The format itself is pretty barebones, but it should be expandable enough. I might make a new level editor / level format later on down the line if I feel like it.
 

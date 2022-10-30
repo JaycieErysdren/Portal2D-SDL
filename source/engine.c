@@ -4,17 +4,18 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Main engine functions.
 //
-// LAST EDITED:		October 10th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
 // Global variables
 WALL				walls[MAX_WALL];
@@ -39,9 +40,6 @@ PICTURE				pic_fbuffer;
 PICTURE				pic_bbuffer;
 PICTURE				pic_zbuffer;
 
-//PICTURE			pic_arrow;
-//PICTURE			pic_lens;
-
 PICTURE				pic_sky;
 PICTURE				pic_console;
 PICTURE				pic_font;
@@ -53,7 +51,7 @@ PALETTE				palette;
 // General purpose string buffer. Results should be copied after use.
 char				sbuf[1024];
 
-void RexLightmapsCreate(LIGHTMAP lightmap, PALETTE palette, int brightness)
+void LightmapsCreate(LIGHTMAP lightmap, PALETTE palette, int brightness)
 {
 	int fr = 0;
 	int fg = 0;
@@ -64,7 +62,7 @@ void RexLightmapsCreate(LIGHTMAP lightmap, PALETTE palette, int brightness)
 	{
 		for (j = 0; j < 32; j++)
 		{
-			lightmap[j][i] = RexPaletteSearch(palette,
+			lightmap[j][i] = PaletteSearch(palette,
 				imin(imuldiv(fr + imuldiv(palette[i][0] - fr, j, 31), brightness * 4, 31), 255),
 				imin(imuldiv(fg + imuldiv(palette[i][1] - fg, j, 31), brightness * 4, 31), 255),
 				imin(imuldiv(fb + imuldiv(palette[i][2] - fb, j, 31), brightness * 4, 31), 255));
@@ -72,12 +70,12 @@ void RexLightmapsCreate(LIGHTMAP lightmap, PALETTE palette, int brightness)
 	}
 }
 
-void RexTablesCreate(void)
+void TablesCreate(void)
 {
 	int i, x, y, r;
 
 	say("Calculating Lightmaps.");
-	for (i = 32; i--;) RexLightmapsCreate(lightmaps[i], palette, i);
+	for (i = 32; i--;) LightmapsCreate(lightmaps[i], palette, i);
 
 	say("Calculating Blender LUT.");
 
@@ -87,7 +85,7 @@ void RexTablesCreate(void)
 		{
 			r = (palette[x][0] + palette[y][0]) >> 1;
 
-			blender[y][x] = RexPaletteSearch(palette,
+			blender[y][x] = PaletteSearch(palette,
 				(palette[x][0] + palette[y][0]) >> 1,
 				(palette[x][1] + palette[y][1]) >> 1,
 				(palette[x][2] + palette[y][2]) >> 1);
@@ -95,32 +93,27 @@ void RexTablesCreate(void)
 	}
 }
 
-void RexEngineDestroy(void)
+void EngineDestroy(void)
 {
-	#ifdef REX_DOS
 	div0_close();
-	#endif
 
-	RexTimerRemove();
-	RexKeyboardRemove();
+	TimerRemove();
+	KeyboardRemove();
 
-	#ifdef REX_DOS
-	RexPictureDestroy(&pic_fbuffer);
-	#endif
+	PictureDestroy(&pic_fbuffer);
+	PictureDestroy(&pic_bbuffer);
+	PictureDestroy(&pic_zbuffer);
+	PictureDestroy(&pic_stencil);
+	PictureDestroy(&pic_console);
 
-	RexPictureDestroy(&pic_bbuffer);
-	RexPictureDestroy(&pic_zbuffer);
-	RexPictureDestroy(&pic_stencil);
-	RexPictureDestroy(&pic_console);
+	MouseShow(0);
 
-	RexMouseShow(0);
-
-	RexGraphicsRemove();
+	GraphicsRemove();
 
 	exit(EXIT_SUCCESS);
 }
 
-void RexEngineExecute(void)
+void EngineExecute(void)
 {
 	int half_x = 160, half_y = 100;
 
@@ -132,29 +125,25 @@ void RexEngineExecute(void)
 	int floor_z, ceil_z, under;
 	int frame_count = 0;
 
-	#ifdef REX_DOS
 	div0_init(DM_SATURATE);
-	#endif
 
-	RexMouseShow(0);
+	MouseShow(0);
 
-	RexGraphicsInstall("Portal2D", 320, 200);
+	GraphicsInstall("Portal2D", 320, 200);
 
-	#ifdef REX_DOS
-	RexPictureCreate(&pic_fbuffer, view.width, view.height, 8, 0, (void *)0xA0000);
-	#endif
+	PictureCreate(&pic_fbuffer, view.width, view.height, 8, 0, (void *)0xA0000);
 
-	RexPictureCreate(&pic_bbuffer, view.width, view.height, 8, 0, 0);
+	PictureCreate(&pic_bbuffer, view.width, view.height, 8, 0, 0);
 
-	RexPictureCreate(&pic_zbuffer, view.width, view.height, 16, 0, 0);
-	RexPictureCreate(&pic_stencil, view.width, view.height, 16, 0, 0);
+	PictureCreate(&pic_zbuffer, view.width, view.height, 16, 0, 0);
+	PictureCreate(&pic_stencil, view.width, view.height, 16, 0, 0);
 
-	RexPictureCreate(&pic_console, 40, 10, 8, 0, 0);
+	PictureCreate(&pic_console, 40, 10, 8, 0, 0);
 
-	RexPaletteInstall(palette);
+	PaletteInstall(palette);
 
-	RexKeyboardInstall();
-	RexTimerInstall(120);
+	KeyboardInstall();
+	TimerInstall(120);
 
 	thing->sid = 0;
 	thing->x = -900;
@@ -170,98 +159,43 @@ void RexEngineExecute(void)
 
 	for (tick = timer;;)
 	{
-		RexPictureLiquidEffect8(&textures[41], &textures[42], tick);
-		RexPictureLiquidEffect8(&textures[43], &textures[44], tick);
+		PictureLiquidEffect8(&textures[41], &textures[42], tick);
+		PictureLiquidEffect8(&textures[43], &textures[44], tick);
 
-		RexPictureBlend8(&textures[113], &textures[41], &textures[15], blender);
-		RexPictureBlend8(&textures[114], &textures[41], &textures[64], blender);
+		PictureBlend8(&textures[113], &textures[41], &textures[15], blender);
+		PictureBlend8(&textures[114], &textures[41], &textures[64], blender);
 
-		RexRenderView(camera);
-		RexDevicesRead();
-
-		#ifdef REX_SDL
-
-		RexObjectUpdate(thing);
-		thing->rot.y += 2;
-
-		RexObjectUpdate(camera);
-		RexObjectCollision(camera);
-
-		RexSectorZ(camera->sid, camera->x, camera->y, &floor_z, &ceil_z, 0);
-
-		if (KEY_DOWN(KB_W))
-		{
-			camera->xx += imuldiv(fixsin(camera->rot.y), 6, 8);
-			camera->yy += imuldiv(fixcos(camera->rot.y), 6, 8);
-		}
-		if (KEY_DOWN(KB_S))
-		{
-			camera->xx -= imuldiv(fixsin(camera->rot.y), 6, 8);
-			camera->yy -= imuldiv(fixcos(camera->rot.y), 6, 8);
-		}
-		if (KEY_DOWN(KB_A))
-		{
-			camera->xx -= imuldiv(fixcos(camera->rot.y), 6, 8);
-			camera->yy += imuldiv(fixsin(camera->rot.y), 6, 8);
-		}
-		if (KEY_DOWN(KB_D))
-		{
-			camera->xx += imuldiv(fixcos(camera->rot.y), 6, 8);
-			camera->yy -= imuldiv(fixsin(camera->rot.y), 6, 8);
-		}
-		if (KEY_PRESSED(KB_SPACE)) camera->zz += fl2f(15);
-		if (KEY_DOWN(KB_CTRL)) camera->zz -= fl2f(0.7);
-		if (KEY_DOWN(KB_RTARROW)) camera->rot.y += 7;
-		if (KEY_DOWN(KB_LTARROW)) camera->rot.y -= 7;
-
-		#endif
-
-		#ifdef DUMP_BUFFER
-		// dump screen buffer and then close
-		if (KEY_DOWN(KB_C))
-		{
-			FILE *dumpfile;
-
-			dumpfile = fopen("dumpfile.dat", "wb");
-
-			fwrite(pic_bbuffer.buffer, 320 * 200, 1, dumpfile);
-			fclose(dumpfile);
-
-			RexEngineDestroy();
-		}
-		#endif
+		RenderView(camera);
+		DevicesRead();
 
 		// reset position after reading it
-		RexMouseSet(&half_x, &half_y);
+		MouseSet(&half_x, &half_y);
 
-		#ifdef REX_DOS
 		sprintf(sbuf, "Key:%3d X:%4d Y:%4d Z:%4d SID:%d",
-			rx_key_last,
+			input_key_last,
 			camera->x,
 			camera->y,
 			camera->z,
 			camera->sid);
 
-		RexConsoleOutText(0, 0, sbuf);
+		ConsoleOutText(0, 0, sbuf);
 
-		RexSectorZ(camera->sid, camera->x, camera->y, &floor_z, &ceil_z, 0);
+		SectorZ(camera->sid, camera->x, camera->y, &floor_z, &ceil_z, 0);
 
 		sprintf(sbuf, "%d %d FPS: %d", floor_z, ceil_z, imuldiv(frame_count++, 120, timer + 1));
-		RexConsoleOutText(0, 1, sbuf);
-		#endif
+		ConsoleOutText(0, 1, sbuf);
 
-		#ifdef REX_DOS
 		for (; tick < timer; tick++)
 		{
 			camera->zz -= fl2f(0.4); // Gravity
 
-			RexObjectUpdate(thing);
+			ObjectUpdate(thing);
 			thing->rot.y += 2;
 
-			RexObjectUpdate(camera);
-			RexObjectCollision(camera);
+			ObjectUpdate(camera);
+			ObjectCollision(camera);
 
-			RexSectorZ(camera->sid, camera->x, camera->y, &floor_z, &ceil_z, 0);
+			SectorZ(camera->sid, camera->x, camera->y, &floor_z, &ceil_z, 0);
 
 			under = ((camera->z - 300) << 6) - floor_z;
 
@@ -306,11 +240,11 @@ void RexEngineExecute(void)
 				}
 			}
 
-			//if (KEY_PRESSED(88)) RexPictureSave(&pic_bbuffer, "screen.pcx", view.palette);
+			//if (KEY_PRESSED(88)) PictureSave(&pic_bbuffer, "screen.pcx", view.palette);
 
 			// view controls
-			camera->rot.y += (mouse_x - half_x);
-			camera->rot.x -= (mouse_y - half_y);
+			camera->rot.y += (input_mouse_x - half_x);
+			camera->rot.x -= (input_mouse_y - half_y);
 
 			if (camera->rot.x > 320) camera->rot.x = 320;
 			else if (camera->rot.x < -320) camera->rot.x = -320;
@@ -320,7 +254,7 @@ void RexEngineExecute(void)
 			//if (KEY_DOWN(KB_RTARROW)) camera->rot.y += 7;
 			//if (KEY_DOWN(KB_LTARROW)) camera->rot.y -= 7;
 
-			if (KEY_DOWN(KB_ESC)) RexEngineDestroy();
+			if (KEY_DOWN(KB_ESC)) EngineDestroy();
 
 			#ifdef EDITABLE_SURFACES
 				#define SURFACE_EDIT(VAR,SUR,A) (clipboard.VAR = (SUR.VAR = KEY_DOWN(KB_CTRL) ? clipboard.VAR : SUR.VAR + (KEY_DOWN(KB_LTSHIFT) ? -(A) : (A))))
@@ -441,19 +375,14 @@ void RexEngineExecute(void)
 				}
 			#endif
 
-			#ifdef REX_DOS
-				memcpy(rx_keys_prev, rx_keys, sizeof(rx_keys_prev));
-			#endif
+			memcpy(input_keys_prev, input_keys, sizeof(input_keys_prev));
 		}
-		#endif
 	}
 
-	#ifdef REX_DOS
 	div0_close();
-	#endif
 }
 
-void RexEngineCreate(void)
+void EngineCreate(void)
 {
 	int i;
 
@@ -464,25 +393,25 @@ void RexEngineCreate(void)
 	say("");
 
 	say("Installing mouse driver.");
-	RexMouseInstall();
+	MouseInstall();
 
 	say("Allocating offscreen buffers.");
 
-	RexPictureLoad(&pic_font, "images/font8x8.bmp", palette);
-	RexPictureLoad(&pic_sky, "images/sky.bmp", palette);
-	//RexPictureLoad(&pic_arrow, "images/arrow.pcx", palette);
-	//RexPictureLoad(&pic_lens, "images/lens.pcx", palette);
+	PictureLoad(&pic_font, "images/font8x8.bmp", palette);
+	PictureLoad(&pic_sky, "images/sky.bmp", palette);
+	//PictureLoad(&pic_arrow, "images/arrow.pcx", palette);
+	//PictureLoad(&pic_lens, "images/lens.pcx", palette);
 
 	say("Installing palette.");
-	RexPaletteLoad("gfx/palette.dat");
+	PaletteLoad("gfx/palette.dat");
 
-	RexTablesCreate();
+	TablesCreate();
 
 	say("Loading textures.");
 
 	for (i = 0; i < MAX_TEXTURE; i++)
 	{
 		sprintf(sbuf, "textures/%d.bmp", i);
-		RexPictureLoad(&textures[i], sbuf, palette);
+		PictureLoad(&textures[i], sbuf, palette);
 	}
 }

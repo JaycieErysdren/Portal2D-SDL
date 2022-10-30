@@ -4,28 +4,23 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Utility functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
 void say(char* s)
 {
-	#ifdef REX_SDL
-		printf("%s\n", s);
-	#endif
-
-	#ifdef REX_DOS
-		_outtext(s);
-		_outtext("\n");
-	#endif
+	_outtext(s);
+	_outtext("\n");
 }
 
 void fail(char *s, ...)
@@ -40,7 +35,7 @@ void fail(char *s, ...)
 	vsprintf(failure_message + (sizeof(failure_header) - 1), s, args);
 	va_end(args);
 
-	RexGraphicsRemove();
+	GraphicsRemove();
 	printf(failure_message);
 	exit(EXIT_FAILURE);
 }

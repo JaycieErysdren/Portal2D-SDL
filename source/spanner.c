@@ -4,30 +4,31 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		2D span clipping functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
-void RexSpanArrayInvalidate(SPAN_ARRAY* spanline, int x1, int x2)
+void SpanArrayInvalidate(SPAN_ARRAY *spanline, int x1, int x2)
 {
 	spanline->nspans = 1;
 	spanline->spans[0].x1 = x1;
 	spanline->spans[0].x2 = x2;
 }
 
-void RexSpanArrayValidate(SPAN_ARRAY* array, int x1, int x2)
+void SpanArrayValidate(SPAN_ARRAY *array, int x1, int x2)
 {
 	int n;
-	SPAN* span = array->spans;
-	SPAN* newspan = &array->spans[array->nspans];
+	SPAN *span = array->spans;
+	SPAN *newspan = &array->spans[array->nspans];
 
 	for (n = array->nspans; n--; span++)
 	{
@@ -52,7 +53,7 @@ void RexSpanArrayValidate(SPAN_ARRAY* array, int x1, int x2)
 				}
 				else
 				{
-					SPAN* s;
+					SPAN *s;
 					for (s = span; s != newspan; s[0] = s[1], s++);
 
 					newspan--;
@@ -65,7 +66,7 @@ void RexSpanArrayValidate(SPAN_ARRAY* array, int x1, int x2)
 	assert(array->nspans >= 0 && array->nspans < 60);
 }
 
-void RexSpannerInvalidate(SPANNER* spanner)
+void SpannerInvalidate(SPANNER *spanner)
 {
 	int i;
 
@@ -73,23 +74,23 @@ void RexSpannerInvalidate(SPANNER* spanner)
 
 	for (i = 0; i < spanner->height; i++)
 	{
-		RexSpanArrayInvalidate(&spanner->lines[i], 0, spanner->width);
+		SpanArrayInvalidate(&spanner->lines[i], 0, spanner->width);
 	}
 }
 
-void RexSpannerValidate(SPANNER* spanner, int x1, int y1, int x2, int y2)
+void SpannerValidate(SPANNER *spanner, int x1, int y1, int x2, int y2)
 {
 	int i;
 
 	for (i = y1; i < y2; i++)
 	{
-		RexSpanArrayValidate(&spanner->lines[i], x1, x2);
+		SpanArrayValidate(&spanner->lines[i], x1, x2);
 
 		if (spanner->lines[i].nspans == 0) spanner->ngaps--;
 	}
 }
 
-void RexSpannerCreate(SPANNER* spanner, int width, int height)
+void SpannerCreate(SPANNER *spanner, int width, int height)
 {
 	memset(spanner, 0, sizeof(SPANNER));
 
@@ -98,7 +99,7 @@ void RexSpannerCreate(SPANNER* spanner, int width, int height)
 	spanner->lines = (SPAN_ARRAY*) calloc(height, sizeof(SPAN_ARRAY));
 }
 
-void RexSpannerDelete(SPANNER* spanner)
+void SpannerDelete(SPANNER *spanner)
 {
 	free(spanner->lines);
 }

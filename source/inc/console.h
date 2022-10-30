@@ -4,14 +4,14 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Console handling function prototypes.
 //
-// LAST EDITED:		October 6th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-void RexConsoleOutText(int x, int y, STRING text);
+void ConsoleOutText(int x, int y, STRING text);

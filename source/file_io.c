@@ -4,19 +4,20 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		File I/O functions.
 //
-// LAST EDITED:		October 10th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
-int RexChunkWrite(FILE* fp, int type, int id, int flag, void* buff, int size)
+int ChunkWrite(FILE *fp, int type, int id, int flag, void *buff, int size)
 {
 	return
 		(fwrite(&type, sizeof(int), 1, fp) == 1) &&
@@ -26,7 +27,7 @@ int RexChunkWrite(FILE* fp, int type, int id, int flag, void* buff, int size)
 		(fwrite(buff, size, 1, fp) == 1);
 }
 
-int RexChunkRead(FILE* fp, int* type, int* id, int* flag, void* buff, int* size)
+int ChunkRead(FILE *fp, int *type, int *id, int *flag, void *buff, int *size)
 {
 	return
 		(fread(type, sizeof(int), 1, fp) == 1) &&
@@ -36,37 +37,37 @@ int RexChunkRead(FILE* fp, int* type, int* id, int* flag, void* buff, int* size)
 		(fread(buff, *size, 1, fp) == 1);
 }
 
-void RexWallWrite(int wid, FILE* fp)
+void WallWrite(int wid, FILE *fp)
 {
-	RexChunkWrite(fp, 'WALL', wid, 0, &walls[wid], offsetof(WALL, reserved));
+	ChunkWrite(fp, 'WALL', wid, 0, &walls[wid], offsetof(WALL, reserved));
 }
 
-void RexSectorWrite(int sid, FILE* fp)
+void SectorWrite(int sid, FILE *fp)
 {
-	RexChunkWrite(fp, 'SECT', sid, 0, &sectors[sid], offsetof(SECTOR, reserved));
+	ChunkWrite(fp, 'SECT', sid, 0, &sectors[sid], offsetof(SECTOR, reserved));
 }
 
-void RexLevelWrite(FILE* fp)
+void LevelWrite(FILE *fp)
 {
 	int i;
-	for (i = 0; i < MAX_WALL ; i++) if (walls[i].sid) RexWallWrite(i, fp);
-	for (i = 0; i < MAX_SECTOR; i++) if (sectors[i].lid) RexSectorWrite(i, fp);
+	for (i = 0; i < MAX_WALL ; i++) if (walls[i].sid) WallWrite(i, fp);
+	for (i = 0; i < MAX_SECTOR; i++) if (sectors[i].lid) SectorWrite(i, fp);
 }
 
-void RexLevelClear(void)
+void LevelClear(void)
 {
 	memset(walls, 0, sizeof(walls));
 	memset(sectors, 0, sizeof(sectors));
 }
 
-void RexLevelRead(FILE* fp)
+void LevelRead(FILE *fp)
 {
 	char buffer[1024];
 	int type, id, flag, size;
 
-	RexLevelClear();
+	LevelClear();
 
-	while (RexChunkRead(fp, &type, &id, &flag, buffer, &size))
+	while (ChunkRead(fp, &type, &id, &flag, buffer, &size))
 	{
 		if (type == 'WALL')
 		{
@@ -81,24 +82,24 @@ void RexLevelRead(FILE* fp)
 	}
 }
 
-void RexLevelSave(PATH fn)
+void LevelSave(PATH fn)
 {
-	FILE* fp = fopen(fn, "wb");
+	FILE *fp = fopen(fn, "wb");
 
 	if (fp)
 	{
-		RexLevelWrite(fp);
+		LevelWrite(fp);
 		fclose(fp);
 	}
 }
 
-void RexLevelLoad(PATH fn)
+void LevelLoad(PATH fn)
 {
-	FILE* fp = fopen(fn, "rb");
+	FILE *fp = fopen(fn, "rb");
 
 	if (fp)
 	{
-		RexLevelRead(fp);
+		LevelRead(fp);
 		fclose(fp);
 	}
 	else

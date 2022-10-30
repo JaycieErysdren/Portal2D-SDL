@@ -4,21 +4,21 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Rendering functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id, const int width, const int height);
-void RexRenderPolygonGL(POLYGON polygon, int n, SURFACE *surface, int id, MATRIX matrix);
-void RexRenderWallTexture(int wid, MATRIX matrix);
-void RexRenderSector(int sid, MATRIX matrix);
-void RexRenderSectorMiddle(int sid, MATRIX matrix);
-void RexRenderObject(int oid, MATRIX matrix);
-void RexRenderConsole(void);
-void RexRenderView(OBJECT* camera);
+void RenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id, const int width, const int height);
+void RenderPolygonGL(POLYGON polygon, int n, SURFACE *surface, int id, MATRIX matrix);
+void RenderWallTexture(int wid, MATRIX matrix);
+void RenderSector(int sid, MATRIX matrix);
+void RenderSectorMiddle(int sid, MATRIX matrix);
+void RenderObject(int oid, MATRIX matrix);
+void RenderConsole(void);
+void RenderView(OBJECT *camera);

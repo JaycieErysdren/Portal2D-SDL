@@ -4,13 +4,13 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		VSCode C / C++ settings.
 //
-// LAST EDITED:		October 8th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
@@ -21,13 +21,10 @@
 			"includePath": [
 				"${workspaceFolder}/**",
 				"${workspaceFolder}/inc/**",
-				"${workspaceFolder}/../modules/gbm/**",
-				"${workspaceFolder}/../modules/div0/**",
-				"${workspaceFolder}/../modules/drlibs/**",
+				"${workspaceFolder}/external/div0/**",
 				"/usr/bin/watcom/h/**"
 			],
-			//"defines": ["REX_DOS", "__WATCOMC__"]
-			"defines": ["REX_SDL"]
+			"defines": ["__WATCOMC__"]
 		}
 	],
 	"version": 4

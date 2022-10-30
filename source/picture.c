@@ -4,20 +4,21 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Picture handling functions.
 //
-// LAST EDITED:		October 9th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
 // creates a picture. allocates required pixel buffer and pre-calculates scanline pointers.
-void RexPictureCreate(PICTURE* picture, int width, int height, int bpp, int bytes_per_row, void* buffer)
+void PictureCreate(PICTURE *picture, int width, int height, int bpp, int bytes_per_row, void *buffer)
 {
 	memset(picture, 0, sizeof(PICTURE));
 
@@ -36,11 +37,11 @@ void RexPictureCreate(PICTURE* picture, int width, int height, int bpp, int byte
 	while (height--) picture->scanlines.b[height] = (BYTE *)((DWORD)picture->buffer + bytes_per_row * height);
 }
 
-void RexPictureCreateMip(PICTURE* dst, PICTURE* src, CLUT blender)
+void PictureCreateMip(PICTURE *dst, PICTURE *src, CLUT blender)
 {
 	int x, y;
 
-	RexPictureCreate(dst, src->width, src->height, src->bpp, 0, 0);
+	PictureCreate(dst, src->width, src->height, src->bpp, 0, 0);
 
 	for (y = 0; y < dst->height; y += 2)
 	{
@@ -59,7 +60,7 @@ void RexPictureCreateMip(PICTURE* dst, PICTURE* src, CLUT blender)
 }
 
 // destroys the resourced allocated to a picture.
-void RexPictureDestroy(PICTURE* picture)
+void PictureDestroy(PICTURE *picture)
 {
 	assert(picture);
 	if (!picture->shared) free(picture->buffer);
@@ -67,29 +68,29 @@ void RexPictureDestroy(PICTURE* picture)
 }
 
 // resizes a pictures buffer. does not maintain picture contents.
-void RexPictureResize(PICTURE* picture, int width, int height)
+void PictureResize(PICTURE *picture, int width, int height)
 {
 	if (picture->width != width || picture->height != height)
 	{
 		int bpp = picture->bpp;
-		RexPictureDestroy(picture);
-		RexPictureCreate(picture, width, height, bpp, 0, 0);
+		PictureDestroy(picture);
+		PictureCreate(picture, width, height, bpp, 0, 0);
 	}
 }
 
 // A fast picture content clear.
-void RexPictureClear(PICTURE* picture)
+void PictureClear(PICTURE *picture)
 {
 	memset(picture->buffer, 0, picture->bytes_per_row * picture->height);
 }
 
 // A fast picture content copy. Pictures must be compatible.
-void RexPictureCopy(PICTURE* dst, PICTURE* src)
+void PictureCopy(PICTURE *dst, PICTURE *src)
 {
 	memcpy(dst->buffer, src->buffer, dst->bytes_per_row * dst->height);
 }
 
-void RexPictureLoad(PICTURE *picture, PATH filename, PALETTE palette)
+void PictureLoad(PICTURE *picture, PATH filename, PALETTE palette)
 {
 	FILE *fp;
 	WORD width, height;
@@ -113,7 +114,7 @@ void RexPictureLoad(PICTURE *picture, PATH filename, PALETTE palette)
 	fskip(fp, 22);
 	fread(&num_palette_colors, sizeof(WORD), 1, fp);
 
-	RexPictureCreate(picture, width, height, 0, 0, 0);
+	PictureCreate(picture, width, height, 0, 0, 0);
 
 	fskip(fp, 6);
 	fskip(fp, num_palette_colors * 4);
@@ -123,12 +124,12 @@ void RexPictureLoad(PICTURE *picture, PATH filename, PALETTE palette)
 	fclose(fp);
 }
 
-void RexPictureSave(PICTURE *picture, PATH filename, PALETTE palette)
+void PictureSave(PICTURE *picture, PATH filename, PALETTE palette)
 {
-	fail("RexPictureSave is not implemented at this time.");
+	fail("PictureSave is not implemented at this time.");
 }
 
-void RexPictureAssertSame(PICTURE* dst, PICTURE* src)
+void PictureAssertSame(PICTURE *dst, PICTURE *src)
 {
 	assert(dst && src);
 	assert(dst->width == src->width);
@@ -136,18 +137,18 @@ void RexPictureAssertSame(PICTURE* dst, PICTURE* src)
 	assert(dst->bpp == src->bpp);
 }
 
-void RexPictureFlip8(PICTURE* dst, PICTURE* src)
+void PictureFlip8(PICTURE *dst, PICTURE *src)
 {
 	int x, y1, y2;
 
-	RexPictureAssertSame(dst, src);
+	PictureAssertSame(dst, src);
 
 	for (y1 = 0, y2 = dst->height - 1; y1 < y2; y1++, y2--)
 	{
-		BYTE* s1 = src->scanlines.b[y1];
-		BYTE* s2 = src->scanlines.b[y2];
-		BYTE* d1 = dst->scanlines.b[y1];
-		BYTE* d2 = dst->scanlines.b[y2];
+		BYTE *s1 = src->scanlines.b[y1];
+		BYTE *s2 = src->scanlines.b[y2];
+		BYTE *d1 = dst->scanlines.b[y1];
+		BYTE *d2 = dst->scanlines.b[y2];
 
 		for (x = dst->width; x--;)
 		{
@@ -158,12 +159,12 @@ void RexPictureFlip8(PICTURE* dst, PICTURE* src)
 	}
 }
 
-void RexPictureDraw8(PICTURE* dst, PICTURE* src, int x, int y, int flags)
+void PictureDraw8(PICTURE *dst, PICTURE *src, int x, int y, int flags)
 {
-	RexPictureBlit8(dst, x, y, x + src->width, y + src->height, src, 0, 0, src->width, src->height, flags);
+	PictureBlit8(dst, x, y, x + src->width, y + src->height, src, 0, 0, src->width, src->height, flags);
 }
 
-void RexPictureBlit8(PICTURE* dst, int x1, int y1, int x2, int y2, PICTURE* src, int u1, int v1, int u2, int v2, int mode)
+void PictureBlit8(PICTURE *dst, int x1, int y1, int x2, int y2, PICTURE *src, int u1, int v1, int u2, int v2, int mode)
 {
 	int w, h, u, uu, vv;
 
@@ -221,28 +222,28 @@ void RexPictureBlit8(PICTURE* dst, int x1, int y1, int x2, int y2, PICTURE* src,
 	}
 }
 
-void RexPictureLiquidEffect8(PICTURE* dst, PICTURE* src, int tick)
+void PictureLiquidEffect8(PICTURE *dst, PICTURE *src, int tick)
 {
 	int y;
 	for (y = dst->height; y--;)
 	{
 		int x = fixsin(y * 32 + tick * 5) >> 13;
 
-		RexPictureBlit8(dst, x, y, x + dst->width, y + 1, src, 0, y, src->width, y + 1, PICTURE_MODE_COPY);
-		RexPictureBlit8(dst, x - dst->width, y, x, y + 1, src, 0, y, src->width, y + 1, PICTURE_MODE_COPY);
-		RexPictureBlit8(dst, x + dst->width, y, x + dst->width + dst->width, y + 1, src, 0, y, src->width, y + 1, PICTURE_MODE_COPY);
+		PictureBlit8(dst, x, y, x + dst->width, y + 1, src, 0, y, src->width, y + 1, PICTURE_MODE_COPY);
+		PictureBlit8(dst, x - dst->width, y, x, y + 1, src, 0, y, src->width, y + 1, PICTURE_MODE_COPY);
+		PictureBlit8(dst, x + dst->width, y, x + dst->width + dst->width, y + 1, src, 0, y, src->width, y + 1, PICTURE_MODE_COPY);
 	}
 }
 
-void RexPictureBlend8(PICTURE* dst, PICTURE* src1, PICTURE* src2, CLUT blender)
+void PictureBlend8(PICTURE *dst, PICTURE *src1, PICTURE *src2, CLUT blender)
 {
 	int x, y;
 
 	for (y = dst->height; y--;)
 	{
-		BYTE* a = dst ->scanlines.b[y];
-		BYTE* b = src1->scanlines.b[y];
-		BYTE* c = src2->scanlines.b[y];
+		BYTE *a = dst ->scanlines.b[y];
+		BYTE *b = src1->scanlines.b[y];
+		BYTE *c = src2->scanlines.b[y];
 
 		for (x = dst->width; x--;)
 		{
@@ -251,7 +252,7 @@ void RexPictureBlend8(PICTURE* dst, PICTURE* src1, PICTURE* src2, CLUT blender)
 	}
 }
 
-int RexPaletteSearch(PALETTE palette, int r, int g, int b)
+int PaletteSearch(PALETTE palette, int r, int g, int b)
 {
 	int i, pen, dist = INT_MAX;
 

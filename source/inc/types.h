@@ -4,13 +4,13 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Simple and complex datatypes.
 //
-// LAST EDITED:		October 8th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
@@ -21,18 +21,8 @@ typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
 
-#ifdef REX_SDL
-
-typedef int64_t INT64;
-typedef int32_t INT32;
-
-#endif
-
-#ifdef REX_DOS
-
+typedef __int32 INT32;
 typedef __int64 INT64;
-
-#endif
 
 typedef char STRING[256];
 typedef char PATH[1024];

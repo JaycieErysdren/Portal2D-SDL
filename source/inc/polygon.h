@@ -4,16 +4,16 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Polygon handling function prototypes.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-int RexPolygonClip(POLYGON dst, POLYGON src, int n, int dist[]);
-int RexPolygonClipToFrustrum(POLYGON dst, POLYGON src, int n);
-void RexPolygonProject(POLYGON dst, POLYGON src, int n, int width, int height, SURFACE* surface);
+int PolygonClip(POLYGON dst, POLYGON src, int n, int dist[]);
+int PolygonClipToFrustrum(POLYGON dst, POLYGON src, int n);
+void PolygonProject(POLYGON dst, POLYGON src, int n, int width, int height, SURFACE *surface);

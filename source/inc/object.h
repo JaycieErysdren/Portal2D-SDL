@@ -4,19 +4,19 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Object handling function prototypes.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-void RexObjectLocalSpace(OBJECT* object, MATRIX matrix);
-void RexObjectMatrix(OBJECT* object, MATRIX matrix, int width, int height);
-void RexObjectUpdate(OBJECT* object);
-void RexObjectWallCollision(OBJECT* object, int wid);
-void RexObjectSectorCollision(OBJECT* object, int sid);
-void RexObjectCollision(OBJECT* object);
+void ObjectLocalSpace(OBJECT* object, MATRIX matrix);
+void ObjectMatrix(OBJECT* object, MATRIX matrix, int width, int height);
+void ObjectUpdate(OBJECT* object);
+void ObjectWallCollision(OBJECT* object, int wid);
+void ObjectSectorCollision(OBJECT* object, int sid);
+void ObjectCollision(OBJECT* object);

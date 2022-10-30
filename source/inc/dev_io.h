@@ -4,136 +4,77 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Generic Device I/O layer.
 //
-// LAST EDITED:		October 10th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-extern int mouse_x, mouse_y;
+extern int input_mouse_x, input_mouse_y;
 
-extern char rx_keys[512];
-extern char rx_keys_prev[512];
-extern char rx_key_last;
+extern char input_keys[512];
+extern char input_keys_prev[512];
+extern char input_key_last;
 
-#define KEY_PRESSED(A) (rx_keys[A] != rx_keys_prev[A] && rx_keys[A])
-#define KEY_DOWN(A) rx_keys[A]
+#define KEY_PRESSED(A) (input_keys[A] != input_keys_prev[A] && input_keys[A])
+#define KEY_DOWN(A) input_keys[A]
 
 // Input routines
-void RexDevicesRead(void);
+void DevicesRead(void);
 
-// SDL target
-#ifdef REX_SDL
+// DOS clock speed
+#define DOS_CLOCK_SPEED		1193181
 
-	// Keyboard scancodes
-	#define KB_ESC				SDL_SCANCODE_ESCAPE
-	#define KB_DNARROW			SDL_SCANCODE_DOWN
-	#define KB_LTARROW			SDL_SCANCODE_LEFT
-	#define KB_RTARROW			SDL_SCANCODE_RIGHT
-	#define KB_UPARROW			SDL_SCANCODE_UP
-	#define KB_ENTER			SDL_SCANCODE_RETURN
-	#define KB_CTRL				SDL_SCANCODE_LCTRL
-	#define KB_LTSHIFT			SDL_SCANCODE_LSHIFT
-	#define KB_RTSHIFT			SDL_SCANCODE_RSHIFT
-	#define KB_HOME				SDL_SCANCODE_HOME
-	#define KB_PAGEUP			SDL_SCANCODE_PAGEUP
-	#define KB_END				SDL_SCANCODE_END
-	#define KB_PAGEDN			SDL_SCANCODE_PAGEDOWN
-	#define KB_INSERT			SDL_SCANCODE_INSERT
-	#define KB_DELETE			SDL_SCANCODE_DELETE
-	#define KB_W				SDL_SCANCODE_W
-	#define KB_A				SDL_SCANCODE_A
-	#define KB_S				SDL_SCANCODE_S
-	#define KB_D				SDL_SCANCODE_D
-	#define KB_SPACE			SDL_SCANCODE_SPACE
-	#define KB_C				SDL_SCANCODE_C
+// Keyboard scancodes
+#define KB_ESC				0x01
+#define KB_DNARROW			0x50
+#define KB_LTARROW			0x4B
+#define KB_RTARROW			0x4D
+#define KB_UPARROW			0x48
+#define KB_ENTER			28
+#define KB_CTRL				29
+#define KB_LTSHIFT			42
+#define KB_RTSHIFT			54
+#define KB_HOME				71
+#define KB_PAGEUP			73
+#define KB_END				79
+#define KB_PAGEDN			81
+#define KB_INSERT			82
+#define KB_DELETE			83
+#define KB_W				17
+#define KB_A				30
+#define KB_S				31
+#define KB_D				32
+#define KB_SPACE			57
+#define KB_C				46
 
-	// Keyboard functions
-	void RexKeyboardInstall(void);
-	void RexKeyboardRemove(void);
+// Keyboard functions
+void KeyboardInstall(void);
+void KeyboardRemove(void);
 
-	// Mouse functions
-	void RexMouseInstall(void);
-	void RexMouseShow(int);
-	int RexMouseRead(int* x, int* y);
-	void RexMouseSet(int* x, int* y);
-	int RexMousePress(int* x, int* y);
+// Mouse functions
+void MouseInstall(void);
+void MouseShow(int);
+int MouseRead(int *x, int *y);
+void MouseSet(int *x, int *y);
+int MousePress(int *x, int *y);
 
-	// Timer variables
-	extern unsigned timer;
+// Timer variables
+extern unsigned timer;
 
-	// Timer functions
-	void RexTimerInstall(int target_speed);
-	void RexTimerRemove(void);
+// Timer functions
+void TimerInstall(int target_speed);
+void TimerRemove(void);
 
-	// Graphics functions
-	void RexDoubleBuffer(void);
-	void RexGraphicsInstall(const char *title, int width, int height);
-	void RexGraphicsRemove(void);
+// Graphics functions
+void DoubleBuffer(void);
+void GraphicsInstall(const char *title, int width, int height);
+void GraphicsRemove(void);
 
-	// Palette functions
-	void RexPaletteLoad(char *filename);
-	void RexPaletteInstall(PALETTE palette);
-
-#endif
-
-// DOS target
-#ifdef REX_DOS
-
-	#define DOS_CLOCK_SPEED		1193181
-
-	// Keyboard scancodes
-	#define KB_ESC				0x01
-	#define KB_DNARROW			0x50
-	#define KB_LTARROW			0x4B
-	#define KB_RTARROW			0x4D
-	#define KB_UPARROW			0x48
-	#define KB_ENTER			28
-	#define KB_CTRL				29
-	#define KB_LTSHIFT			42
-	#define KB_RTSHIFT			54
-	#define KB_HOME				71
-	#define KB_PAGEUP			73
-	#define KB_END				79
-	#define KB_PAGEDN			81
-	#define KB_INSERT			82
-	#define KB_DELETE			83
-	#define KB_W				17
-	#define KB_A				30
-	#define KB_S				31
-	#define KB_D				32
-	#define KB_SPACE			57
-	#define KB_C				46
-
-	// Keyboard functions
-	void RexKeyboardInstall(void);
-	void RexKeyboardRemove(void);
-
-	// Mouse functions
-	void RexMouseInstall(void);
-	void RexMouseShow(int);
-	int RexMouseRead(int* x, int* y);
-	void RexMouseSet(int* x, int* y);
-	int RexMousePress(int* x, int* y);
-
-	// Timer variables
-	extern unsigned timer;
-
-	// Timer functions
-	void RexTimerInstall(int target_speed);
-	void RexTimerRemove(void);
-
-	// Graphics functions
-	void RexDoubleBuffer(void);
-	void RexGraphicsInstall(const char *title, int width, int height);
-	void RexGraphicsRemove(void);
-
-	// Palette functions
-	void RexPaletteLoad(char *filename);
-	void RexPaletteInstall(PALETTE palette);
-
-#endif
+// Palette functions
+void PaletteLoad(char *filename);
+void PaletteInstall(PALETTE palette);

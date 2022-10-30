@@ -4,27 +4,15 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		More assembly integer math.
 //
-// LAST EDITED:		October 8th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
-
-#ifdef REX_SDL
-
-INT64 mul32_64(INT32 i1, INT32 i2);
-int scale(INT32 input1, INT32 input2, INT32 input3);
-int scaleup(INT32 input1, INT32 input2, INT32 input3);
-int mulscale(INT32 input1, INT32 input2, INT32 input3);
-int dmulscale(INT32 input1, INT32 input2, INT32 input3, INT32 input4, INT32 input5);
-int tmulscale(INT32 i1, INT32 i2, INT32 i3, INT32 i4, INT32 i5, INT32 i6, INT32 shift);
-INT32 divscale(INT32 i1, INT32 i2, INT32 i3);
-
-#endif
 
 static long dmval;
 

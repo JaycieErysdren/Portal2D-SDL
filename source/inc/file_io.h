@@ -4,23 +4,23 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		File I/O header.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
 // Function prototypes
-int RexChunkWrite(FILE* fp, int type, int id, int flag, void* buff, int size);
-int RexChunkRead(FILE* fp, int* type, int* id, int* flag, void* buff, int* size);
-void RexWallWrite(int wid, FILE* fp);
-void RexSectorWrite(int sid, FILE* fp);
-void RexLevelWrite(FILE* fp);
-void RexLevelClear(void);
-void RexLevelRead(FILE* fp);
-void RexLevelSave(PATH fn);
-void RexLevelLoad(PATH fn);
+int ChunkWrite(FILE *fp, int type, int id, int flag, void *buff, int size);
+int ChunkRead(FILE *fp, int *type, int *id, int *flag, void *buff, int *size);
+void WallWrite(int wid, FILE *fp);
+void SectorWrite(int sid, FILE *fp);
+void LevelWrite(FILE *fp);
+void LevelClear(void);
+void LevelRead(FILE *fp);
+void LevelSave(PATH fn);
+void LevelLoad(PATH fn);

@@ -4,29 +4,30 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Rendering functions.
 //
-// LAST EDITED:		October 10th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
 // render polygon to the back buffer. standard perspective correct dda style rendering. also handles sky rendering & mip mapping.
-void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id, const int width, const int height)
+void RenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id, const int width, const int height)
 {
 	int i;
 	POLYGON tmp1, tmp2;
 	int ys[MAX_POLYGON];
 
-	for (i = n; i--; ys[i] = src [i].x + src [i].z); n = RexPolygonClip(tmp2,  src, n, ys); // Left
-	for (i = n; i--; ys[i] = tmp2[i].z - tmp2[i].x); n = RexPolygonClip(tmp1, tmp2, n, ys); // Right
-	for (i = n; i--; ys[i] = tmp1[i].y + tmp1[i].z); n = RexPolygonClip(tmp2, tmp1, n, ys); // Top
-	for (i = n; i--; ys[i] = tmp2[i].z - tmp2[i].y); n = RexPolygonClip(tmp1, tmp2, n, ys); // Bottom
+	for (i = n; i--; ys[i] = src [i].x + src [i].z); n = PolygonClip(tmp2,  src, n, ys); // Left
+	for (i = n; i--; ys[i] = tmp2[i].z - tmp2[i].x); n = PolygonClip(tmp1, tmp2, n, ys); // Right
+	for (i = n; i--; ys[i] = tmp1[i].y + tmp1[i].z); n = PolygonClip(tmp2, tmp1, n, ys); // Top
+	for (i = n; i--; ys[i] = tmp2[i].z - tmp2[i].y); n = PolygonClip(tmp1, tmp2, n, ys); // Bottom
 
 	if (n >= 3)
 	{
@@ -219,13 +220,13 @@ void RexRenderPolygon(POLYGON src, int n, const SURFACE *surface, const WORD id,
 	}
 }
 
-void RexRenderPolygonGL(POLYGON polygon, int n, SURFACE *surface, int id, MATRIX matrix)
+void RenderPolygonGL(POLYGON polygon, int n, SURFACE *surface, int id, MATRIX matrix)
 {
-	RexRenderPolygon(polygon, n, surface, id, pic_bbuffer.width, pic_bbuffer.height);
+	RenderPolygon(polygon, n, surface, id, pic_bbuffer.width, pic_bbuffer.height);
 }
 
 // render the polygons of a wall.
-void RexRenderWallTexture(int wid, MATRIX matrix)
+void RenderWallTexture(int wid, MATRIX matrix)
 {
 	POLYGON polygon;
 
@@ -251,7 +252,7 @@ void RexRenderWallTexture(int wid, MATRIX matrix)
 				polygon[1].u = walls[walls[wid].port].poly[2].u;
 			}
 
-			RexRenderPolygonGL(polygon, 4, &walls[wid].surface, 0x0000 | wid, matrix);
+			RenderPolygonGL(polygon, 4, &walls[wid].surface, 0x0000 | wid, matrix);
 
 			polygon[0] = walls[wid].poly[0];
 			polygon[1] = walls[wid].poly[1];
@@ -261,52 +262,52 @@ void RexRenderWallTexture(int wid, MATRIX matrix)
 			polygon[2].u = walls[walls[wid].port].poly[1].u;
 			polygon[3].u = walls[walls[wid].port].poly[0].u;
 
-			RexRenderPolygonGL(polygon, 4, &walls[wid].surface, 0x0000 | wid, matrix);
+			RenderPolygonGL(polygon, 4, &walls[wid].surface, 0x0000 | wid, matrix);
 		}
 		else
 		{
-			RexRenderPolygonGL(walls[wid].poly, 4, &walls[wid].surface, 0x0000 | wid, matrix);
+			RenderPolygonGL(walls[wid].poly, 4, &walls[wid].surface, 0x0000 | wid, matrix);
 		}
 	}
 }
 
 // render all the components of a sector.
-void RexRenderSector(int sid, MATRIX matrix)
+void RenderSector(int sid, MATRIX matrix)
 {
 	POLYGON polygon;
 
 	int first_wall = FIRST_WALL(sid), wid = first_wall;
 
-	do RexRenderWallTexture(wid, matrix); while ((wid = NEXT_WALL(wid)) != first_wall);
+	do RenderWallTexture(wid, matrix); while ((wid = NEXT_WALL(wid)) != first_wall);
 
 	if (sectors[sid].flags & SECTOR_RENDER_MIDDLE)
 	{
-		//RexRenderPolygonGL(polygon, RexSectorExtrudeMiddle(sid, polygon), &sectors[sid].mid, 0x3000 | sid, matrix);
+		//RenderPolygonGL(polygon, SectorExtrudeMiddle(sid, polygon), &sectors[sid].mid, 0x3000 | sid, matrix);
 	}
 
-	RexRenderPolygonGL(polygon, RexSectorExtrudeFloor(sid, polygon), &sectors[sid].bot, 0x1000 | sid, matrix);
-	RexRenderPolygonGL(polygon, RexSectorExtrudeCeiling(sid, polygon), &sectors[sid].top, 0x2000 | sid, matrix);
+	RenderPolygonGL(polygon, SectorExtrudeFloor(sid, polygon), &sectors[sid].bot, 0x1000 | sid, matrix);
+	RenderPolygonGL(polygon, SectorExtrudeCeiling(sid, polygon), &sectors[sid].top, 0x2000 | sid, matrix);
 }
 
-void RexRenderSectorMiddle(int sid, MATRIX matrix)
+void RenderSectorMiddle(int sid, MATRIX matrix)
 {
 	if (sectors[sid].flags & SECTOR_RENDER_MIDDLE)
 	{
 		POLYGON polygon;
-		RexRenderPolygonGL(polygon, RexSectorExtrudeMiddle(sid, polygon), &sectors[sid].mid, 0x3000 | sid, matrix);
+		RenderPolygonGL(polygon, SectorExtrudeMiddle(sid, polygon), &sectors[sid].mid, 0x3000 | sid, matrix);
 	}
 }
 
-void RexRenderObject(int oid, MATRIX matrix)
+void RenderObject(int oid, MATRIX matrix)
 {
 	MATRIX m;
 	POLYGON polygon;
 
 	int w = 500 << 6, h = 500 << 6;
 
-	RexObjectLocalSpace(&objects[oid], m);
+	ObjectLocalSpace(&objects[oid], m);
 
-	RexMatrixMultiply(m, m, matrix);
+	MatrixMultiply(m, m, matrix);
 
 	polygon[0].x = fixdot3(-w, m[0][0], h, m[0][1], 0, m[0][2]) + m[0][3];
 	polygon[0].y = fixdot3(-w, m[1][0], h, m[1][1], 0, m[1][2]) + m[1][3];
@@ -332,17 +333,17 @@ void RexRenderObject(int oid, MATRIX matrix)
 	polygon[3].u = 0;
 	polygon[3].v = i2f(1024);
 
-	RexRenderPolygonGL(polygon, 4, &objects[oid].front, 0x8000 | oid, matrix);
+	RenderPolygonGL(polygon, 4, &objects[oid].front, 0x8000 | oid, matrix);
 
 	polygon[4] = polygon[3];
 	polygon[5] = polygon[2];
 	polygon[6] = polygon[1];
 	polygon[7] = polygon[0];
 
-	RexRenderPolygonGL(&polygon[4], 4, &objects[oid].back, 0x9000 | oid, matrix);
+	RenderPolygonGL(&polygon[4], 4, &objects[oid].back, 0x9000 | oid, matrix);
 }
 
-void RexRenderConsole(void)
+void RenderConsole(void)
 {
 	int x, y;
 
@@ -354,42 +355,37 @@ void RexRenderConsole(void)
 
 			int c = pic_console.scanlines.b[y][x] << 3;
 
-			RexPictureBlit8(&pic_bbuffer, xx, yy, xx + 8, yy + 8, &pic_font, c, 0, c + 8, 8, PICTURE_MODE_COLORKEY);
+			PictureBlit8(&pic_bbuffer, xx, yy, xx + 8, yy + 8, &pic_font, c, 0, c + 8, 8, PICTURE_MODE_COLORKEY);
 		}
 	}
 }
 
-void RexRenderView(OBJECT *camera)
+void RenderView(OBJECT *camera)
 {
 	int x, y;
 
 	// Clear the zbuffer.
-	RexPictureClear(&pic_zbuffer);
-	
-	#ifdef REX_SDL
-	RexPictureClear(&pic_bbuffer);
-	#endif
+	PictureClear(&pic_zbuffer);
 
 	if (camera->sid)
 	{
 		MATRIX matrix;
 		int i;
 
-		RexSectorCalcVis(camera);
+		SectorCalcVis(camera);
 
-		RexObjectMatrix(camera, matrix, pic_bbuffer.width, pic_bbuffer.height);
+		ObjectMatrix(camera, matrix, pic_bbuffer.width, pic_bbuffer.height);
 
-		for (i = 0; i < sector_list_count; i++) RexSectorTransform(sector_list[i], matrix);
-		for (i = 0; i < sector_list_count; i++) RexRenderSector(sector_list[i], matrix);
-		for (i = 0; i < sector_list_count; i++) RexRenderSectorMiddle(sector_list[i], matrix);
+		for (i = 0; i < sector_list_count; i++) SectorTransform(sector_list[i], matrix);
+		for (i = 0; i < sector_list_count; i++) RenderSector(sector_list[i], matrix);
+		for (i = 0; i < sector_list_count; i++) RenderSectorMiddle(sector_list[i], matrix);
 
-		RexRenderObject(2, matrix);
+		RenderObject(2, matrix);
 	}
 
-	#ifdef REX_DOS
-	RexRenderConsole();
-	#endif
+	// Render console output
+	RenderConsole();
 
 	// Copy view buffer to video memory.
-	RexDoubleBuffer();
+	DoubleBuffer();
 }

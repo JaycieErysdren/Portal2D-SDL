@@ -1,20 +1,20 @@
 // ========================================================
 //
-// FILE:			/source/inc/rex.h
+// FILE:			/source/inc/portal2d.h
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
-// DESCRIPTION:		Global Rex Engine header.
+// DESCRIPTION:		Global Portal2D header.
 //
-// LAST EDITED:		October 10th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-// Standard global headers
+// Standard headers
 #include <fcntl.h>
 #include <string.h>
 #include <time.h>
@@ -26,27 +26,15 @@
 #include <memory.h>
 #include <math.h>
 
-// Standard SDL target headers
-#ifdef REX_SDL
+// DOS headers
+#include <io.h>
+#include <i86.h>
+#include <dos.h>
+#include <graph.h>
+#include <conio.h>
 
-	#include <SDL2/SDL.h>
-
-#endif
-
-// Standard DOS target headers
-#ifdef REX_DOS
-
-	#include <io.h>
-	#include <i86.h>
-	#include <dos.h>
-	#include <graph.h>
-	#include <conio.h>
-
-	#include "div0.h"
-
-#endif
-
-#define DUMP_BUFFER 1
+// DIV0 header
+#include "div0.h"
 
 // Datatypes
 #ifndef __TYPES_H__

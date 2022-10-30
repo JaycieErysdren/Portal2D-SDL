@@ -4,22 +4,23 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Sector handling functions.
 //
-// LAST EDITED:		October 5th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
 static int sector_vis_id;
 
 // returns true if a point is inside a sector. otherwise false.
-int RexSectorPointInside(int sid, int x, int y)
+int SectorPointInside(int sid, int x, int y)
 {
 	int cnt = 0;
 
@@ -47,15 +48,15 @@ int RexSectorPointInside(int sid, int x, int y)
 	return cnt < 0;
 }
 
-int RexSectorFromPoint(int x, int y)
+int SectorFromPoint(int x, int y)
 {
 	int i;
-	for (i = 1; i < MAX_SECTOR; i++) if (RexSectorPointInside(i, x, y)) return i;
+	for (i = 1; i < MAX_SECTOR; i++) if (SectorPointInside(i, x, y)) return i;
 	return 0;
 }
 
 // compute the z of a given point of the floor and ceiling.
-void RexSectorZ(int sid, int x, int y, int* bot, int* top, int* mid)
+void SectorZ(int sid, int x, int y, int* bot, int* top, int* mid)
 {
 	SECTOR* sector = &sectors[sid];
 	x -= sector->bounds.x1;
@@ -66,23 +67,23 @@ void RexSectorZ(int sid, int x, int y, int* bot, int* top, int* mid)
 }
 
 // transform a sector into camera space.
-void RexSectorTransform(int sid, MATRIX matrix)
+void SectorTransform(int sid, MATRIX matrix)
 {
 	int wid, first_wall;
 
-	sectors[sid].center = RexSectorCenter(sid);
-	sectors[sid].bounds = RexSectorBounds(sid);
+	sectors[sid].center = SectorCenter(sid);
+	sectors[sid].bounds = SectorBounds(sid);
 
 	// Transform all the walls into camera space.
 	wid = first_wall = FIRST_WALL(sid);
-	do RexWallTransform(wid, matrix); while ((wid = NEXT_WALL(wid)) != first_wall);
+	do WallTransform(wid, matrix); while ((wid = NEXT_WALL(wid)) != first_wall);
 	// Extrude all the walls.
 	wid = first_wall = FIRST_WALL(sid);
-	do RexWallExtrude(wid, walls[wid].poly); while ((wid = NEXT_WALL(wid)) != first_wall);
+	do WallExtrude(wid, walls[wid].poly); while ((wid = NEXT_WALL(wid)) != first_wall);
 }
 
 // extrude the ceiling of a sector from its walls. Note that we have to create the ceiling vertices in reverse order.
-int RexSectorExtrudeCeiling(int sid, POLYGON poly)
+int SectorExtrudeCeiling(int sid, POLYGON poly)
 {
 	int first_wall = FIRST_WALL(sid), wid = first_wall;
 
@@ -112,7 +113,7 @@ int RexSectorExtrudeCeiling(int sid, POLYGON poly)
 }
 
 // extrude the floor of a sector from its walls.
-int RexSectorExtrudeFloor(int sid, POLYGON poly)
+int SectorExtrudeFloor(int sid, POLYGON poly)
 {
 	int first_wall = FIRST_WALL(sid), wid = first_wall;
 
@@ -139,7 +140,7 @@ int RexSectorExtrudeFloor(int sid, POLYGON poly)
 	return n;
 }
 
-int RexSectorExtrudeMiddle(int sid, POLYGON poly)
+int SectorExtrudeMiddle(int sid, POLYGON poly)
 {
 	int first_wall = FIRST_WALL(sid), wid = first_wall;
 
@@ -167,7 +168,7 @@ int RexSectorExtrudeMiddle(int sid, POLYGON poly)
 }
 
 // calculate the center of a sector.
-POINT RexSectorCenter(int sid)
+POINT SectorCenter(int sid)
 {
 	int n = 0, wid, first_wall;
 	POINT result;
@@ -192,7 +193,7 @@ POINT RexSectorCenter(int sid)
 }
 
 // calculate the bounding box of a sector.
-RECT RexSectorBounds(int sid)
+RECT SectorBounds(int sid)
 {
 	RECT r;
 	int first_wall = FIRST_WALL(sid), wid = first_wall;
@@ -218,7 +219,7 @@ RECT RexSectorBounds(int sid)
 	return r;
 }
 
-int RexSectorsLinked(int s1, int s2)
+int SectorsLinked(int s1, int s2)
 {
 	int first_wall = FIRST_WALL(s1), wid = first_wall;
 
@@ -231,14 +232,14 @@ int RexSectorsLinked(int s1, int s2)
 	return 0;
 }
 
-int RexSectorWallList(int sid, int list[])
+int SectorWallList(int sid, int list[])
 {
 	int wid = FIRST_WALL(sid), first_wall = wid, n = 0;
 	do list[n++] = wid; while ((wid = NEXT_WALL(wid)) != first_wall);
 	return n;
 }
 
-int RexLineClip(int x1, int y1, int x2, int y2, int *u1, int *v1, int *u2, int *v2)
+int LineClip(int x1, int y1, int x2, int y2, int *u1, int *v1, int *u2, int *v2)
 {
 	// Calculate the normal of the clipping line. Note: The length does not have to be 1.
 	int nx = y2 - y1;
@@ -275,7 +276,7 @@ int RexLineClip(int x1, int y1, int x2, int y2, int *u1, int *v1, int *u2, int *
 	return 0;
 }
 
-void __RexSectorCalcVis(int sid, int mx, int my, int lx, int ly, int rx, int ry)
+void __SectorCalcVis(int sid, int mx, int my, int lx, int ly, int rx, int ry)
 {
 	if (!sectors[sid].locked) // Dont enter sector if its locked.
 	{
@@ -295,7 +296,7 @@ void __RexSectorCalcVis(int sid, int mx, int my, int lx, int ly, int rx, int ry)
 			{
 				// Calculate the visablity of each wall. Portals are assumed to be not visible until
 				// we prove otherwise.
-				walls[wid].visible = !walls[wid].port && RexWallIsVisible(wid, mx, my);
+				walls[wid].visible = !walls[wid].port && WallIsVisible(wid, mx, my);
 			}
 			while ((wid = NEXT_WALL(wid)) != first_wall);
 		}
@@ -305,7 +306,7 @@ void __RexSectorCalcVis(int sid, int mx, int my, int lx, int ly, int rx, int ry)
 		do
 		{
 			// Is this a visible portal.
-			if (walls[wid].port && !sectors[walls[walls[wid].port].sid].locked && (walls[wid].visible || RexWallIsVisible(wid, mx, my)))
+			if (walls[wid].port && !sectors[walls[walls[wid].port].sid].locked && (walls[wid].visible || WallIsVisible(wid, mx, my)))
 			{
 				int x1 = walls[wid].x;
 				int y1 = walls[wid].y;
@@ -313,11 +314,11 @@ void __RexSectorCalcVis(int sid, int mx, int my, int lx, int ly, int rx, int ry)
 				int y2 = walls[walls[wid].next].y;
 
 				// Clip the portal to the frustum.
-				if (RexLineClip(mx, my, lx, ly, &x1, &y1, &x2, &y2) != 3 && RexLineClip(rx, ry, mx, my, &x1, &y1, &x2, &y2) != 3)
+				if (LineClip(mx, my, lx, ly, &x1, &y1, &x2, &y2) != 3 && LineClip(rx, ry, mx, my, &x1, &y1, &x2, &y2) != 3)
 				{
 					// The portal is visible. Therefore, traverse though the portal using the new frustum.
 					walls[wid].visible = 1;
-					__RexSectorCalcVis(walls[walls[wid].port].sid, mx, my, x1, y1, x2, y2);
+					__SectorCalcVis(walls[walls[wid].port].sid, mx, my, x1, y1, x2, y2);
 				}
 			}
 		}
@@ -328,13 +329,13 @@ void __RexSectorCalcVis(int sid, int mx, int my, int lx, int ly, int rx, int ry)
 }
 
 // calculate the sector vis from the given camera object.
-void RexSectorCalcVis(OBJECT* camera)
+void SectorCalcVis(OBJECT* camera)
 {
 	sector_vis_id++;
 
 	sector_list_count = 0;
 
-	__RexSectorCalcVis(
+	__SectorCalcVis(
 		camera->sid,
 		camera->x,
 		camera->y,

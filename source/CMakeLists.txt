@@ -71,7 +71,6 @@ set(PORTAL2D_DIR ${CMAKE_SOURCE_DIR})
 add_compile_options("-w4")
 add_compile_options("-e25")
 add_compile_options("-mf")
-add_compile_definitions("REX_DOS")
 
 ## C compile options & definitions
 add_compile_options("$<$<COMPILE_LANGUAGE:C>:-bcl=dos4g>")
@@ -106,7 +105,6 @@ set(PORTAL2D_SRC
 	${PORTAL2D_DIR}/sintable.c
 	${PORTAL2D_DIR}/math_x.c
 	${PORTAL2D_DIR}/math_i.c
-	${PORTAL2D_DIR}/pragmas.c
 	${PORTAL2D_DIR}/matrix.c
 	${PORTAL2D_DIR}/polygon.c
 	${PORTAL2D_DIR}/wall.c

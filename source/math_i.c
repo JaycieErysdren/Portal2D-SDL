@@ -4,17 +4,18 @@
 //
 // AUTHORS:			Jaycie Ewald
 //
-// PROJECT:			Portal2D-SDL
+// PROJECT:			Portal2D
 //
 // LICENSE:			ACSL 1.4
 //
 // DESCRIPTION:		Fixed-point math.
 //
-// LAST EDITED:		October 10th, 2022
+// LAST EDITED:		October 30th, 2022
 //
 // ========================================================
 
-#include "rex.h"
+// Include global header
+#include "portal2d.h"
 
 // Integer square root. Take the square root of an integer.
 int isqrt(int value)
@@ -44,44 +45,3 @@ int isqrt(int value)
 	return root;
 }
 
-#ifdef REX_SDL
-
-int div0(int a)
-{
-	return a < 0 ? INT_MIN : INT_MAX;
-}
-
-int safe_div(int a, int b)
-{
-	return b ? a / b : div0(a);
-}
-
-int imin(int a, int b)
-{
-	return a < b ? b : a;
-}
-
-int imax(int a, int b)
-{
-	return a > b ? b : a;
-}
-
-int isqr(int value)
-{
-	return value * value;
-}
-
-int imuldiv(int a, int b, int c)
-{
-	long long ret = a;
-	ret *= b;
-	if (ret != 0 && c != 0) ret /= c;
-	return ret;
-}
-
-void memcpy32(long *Source, long *Destination, int Length)
-{
-	memcpy(Destination, Source, Length);
-}
-
-#endif
