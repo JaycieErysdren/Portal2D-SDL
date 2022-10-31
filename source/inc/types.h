@@ -14,6 +14,17 @@
 //
 // ========================================================
 
+// Simple types
+typedef int8_t byte_t;
+typedef uint8_t ubyte_t;
+typedef int16_t short_t;
+typedef uint16_t ushort_t;
+typedef int32_t int_t;
+typedef uint32_t uint_t;
+typedef int64_t long_t;
+typedef uint64_t ulong_t;
+typedef void void_t;
+
 // Simple datatypes
 typedef void VOID;
 typedef long LONG;

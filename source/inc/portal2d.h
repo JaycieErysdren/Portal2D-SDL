@@ -143,3 +143,9 @@
 #define __SPANNER_H__
 #include "spanner.h"
 #endif
+
+// World header
+#ifndef __WORLD_H__
+#define __WORLD_H__
+#include "world.h"
+#endif
