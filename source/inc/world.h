@@ -14,6 +14,15 @@
 //
 // ========================================================
 
+// Palette type
+typedef ubyte_t palette_t[256][3];
+
+// CLUT type
+typedef ubyte_t clut_t[256][256];
+
+// Lightmap type
+typedef ubyte_t lightmap_t[32][256];
+
 // 2D coordinate type
 typedef struct
 {
@@ -88,7 +97,7 @@ typedef struct
 	long_t x, y;
 	surface_t *surface;
 
-	int32_t reserved;
+	int_t reserved;
 
 	// Calculated variables. These variables are not saved out to a file.
 	vertex_t *top;
@@ -160,5 +169,19 @@ typedef struct
 	// textures
 	texture_t *textures;
 	ushort_t num_textures;
-
 } world_t;
+
+// View type
+typedef struct
+{
+	int_t width, height;
+	int_t zoom;
+	int_t zoom_div;
+	int_t grid;
+	int_t key;
+	palette_t *palette;
+	texture_t *stencil_buffer;
+	texture_t *screen_buffer;
+	texture_t *color_buffer;
+	texture_t *z_buffer;
+} view_t;
