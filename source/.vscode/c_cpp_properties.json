@@ -21,8 +21,7 @@
 			"includePath": [
 				"${workspaceFolder}/**",
 				"${workspaceFolder}/inc/**",
-				"${workspaceFolder}/external/div0/**",
-				"/usr/bin/watcom/h/**"
+				"${workspaceFolder}/external/div0/**"
 			],
 			"defines": ["__WATCOMC__"]
 		}

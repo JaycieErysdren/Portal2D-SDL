@@ -58,7 +58,7 @@ void KeyboardRemove(void);
 
 // Mouse functions
 void MouseInstall(void);
-void MouseShow(int);
+void MouseShow(int on);
 int MouseRead(int *x, int *y);
 void MouseSet(int *x, int *y);
 int MousePress(int *x, int *y);

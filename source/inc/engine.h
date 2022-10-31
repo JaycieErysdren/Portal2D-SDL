@@ -168,7 +168,7 @@ typedef struct
 	int width;
 	int height;
 	int ngaps;
-	SPAN_ARRAY* lines;
+	SPAN_ARRAY *lines;
 } SPANNER;
 
 // Miscellaneous
